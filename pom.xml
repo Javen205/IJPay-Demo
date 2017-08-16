@@ -6,6 +6,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 
 	<properties>
 		<!-- log4j日志文件管理包版本 -->
@@ -81,7 +88,7 @@
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>java20170411150054</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/alipay-sdk-java20170411150054.jar</systemPath>
+			<systemPath>${project.basedir}/libs/alipay-sdk-java20170725114550.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -91,7 +98,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.3</version>
+			<version>0.4</version>
 		</dependency>
 	</dependencies>
 
@@ -182,10 +189,5 @@
 			</properties>
 		</profile>
 	</profiles>
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+
 </project>
