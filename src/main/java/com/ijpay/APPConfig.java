@@ -51,8 +51,8 @@ public class APPConfig extends JFinalConfig {
 		loadProp("config_pro.properties", "config.properties");
 		me.setDevMode(PropKit.getBoolean("devMode", false));
 		me.setEncoding("utf-8");
-		me.setError404View("/error/404.html");
-	    me.setError500View("/error/500.html");
+		me.setError404View("/WEB-INF/error/404.html");
+	    me.setError500View("/WEB-INF/error/500.html");
 	    me.setViewType(ViewType.JFINAL_TEMPLATE);
 	}
 
@@ -60,6 +60,7 @@ public class APPConfig extends JFinalConfig {
 	 * 配置路由
 	 */
 	public void configRoute(Routes me) {
+		me.setBaseViewPath("/WEB-INF/_views");
 		me.add("/", IndexController.class);
 		me.add("/oauth", WxOauthController.class);
 		me.add("/alipay", AliPayController.class);
