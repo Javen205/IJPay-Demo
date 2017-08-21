@@ -126,7 +126,9 @@ OSchina：[http://git.oschina.net/javen205/IJPay](http://git.oschina.net/javen20
 4. [weui](https://github.com/weui/weui)
 5. [jquery-weui](https://github.com/lihongxun945/jquery-weui/)
 6. [zxing](https://github.com/zxing/zxing)
-7. 感谢xx科技提供微信商户平台测试
+7. [wepayui](https://github.com/wepayui/wepayui)
+8. 感谢第三方公司提供微信商户平台测试
+
 
 >如果对你有帮助,请任意打赏支持
 

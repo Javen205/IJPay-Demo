@@ -32,4 +32,31 @@ public class IndexController extends Controller {
 	public void towxsubpay() {
 		render("wxsubpay.html");
 	}
+	
+	public void toSMoney(){
+		render("pay_select_money.html");
+	}
+	
+	public void toPayInput(){
+		render("pay_input_money.html");
+	}
+	public void suc(){
+		
+	}
+	public void order(){
+		
+	}
+	public void traffic_pay(){
+		
+	}
+	public void hospital(){
+		render("hospital/01_index.html");
+	}
+	
+	public void select_time(){
+		render("hospital/02_select_time.html");
+	}
+	public void register_info(){
+		render("hospital/03_register_info.html");
+	}
 }
