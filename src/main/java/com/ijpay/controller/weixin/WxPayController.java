@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.ijpay.controller.weixin.entity.H5ScencInfo;
+import com.ijpay.controller.weixin.entity.H5ScencInfo.H5;
 import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.PathKit;
@@ -51,6 +53,66 @@ public class WxPayController extends WxPayApiController {
 		log.info("欢迎使用IJPay,商户模式下微信支付 - by Javen");
 		renderText("欢迎使用IJPay 商户模式下微信支付  - by Javen");
 	}
+	
+	public void getKey(){
+		String getsignkey = WxPayApi.getsignkey(mch_id, partnerKey);
+		renderText(getsignkey);
+	}
+	
+	/**
+	 * 微信H5 支付
+	 */
+	public void wapPay(){
+		String ip = IpKit.getRealIp(getRequest());
+		if (StrKit.isBlank(ip)) {
+			ip = "127.0.0.1";
+		}
+		
+		H5ScencInfo sceneInfo = new H5ScencInfo();
+		
+		H5 h5_info = new H5();
+		h5_info.setType("Wap");
+		h5_info.setWap_url("https://pay.qq.com");
+		h5_info.setWap_name("腾讯充值");
+		sceneInfo.setH5_info(h5_info);
+		
+		Map<String, String> params = WxPayApiConfigKit.getWxPayApiConfig()
+				.setAttach("IJPay H5支付测试  -By Javen")
+				.setBody("IJPay H5支付测试  -By Javen")
+				.setSpbillCreateIp(ip)
+				.setTotalFee("520")
+				.setTradeType(TradeType.MWEB)
+				.setNotifyUrl(notify_url)
+				.setOutTradeNo(String.valueOf(System.currentTimeMillis()))
+				.setSceneInfo(h5_info.toString())
+				.setPaternerKey("25861652f3d3acb8b586d4c789022ad8")
+				.build();
+		
+		String xmlResult = WxPayApi.pushOrder(true,params);
+log.info(xmlResult);
+		Map<String, String> result = PaymentKit.xmlToMap(xmlResult);
+		
+		String return_code = result.get("return_code");
+		String return_msg = result.get("return_msg");
+		if (!PaymentKit.codeIsOK(return_code)) {
+			ajax.addError(return_msg);
+			renderJson(ajax);
+			return;
+		}
+		String result_code = result.get("result_code");
+		if (!PaymentKit.codeIsOK(result_code)) {
+			ajax.addError(return_msg);
+			renderJson(ajax);
+			return;
+		}
+		// 以下字段在return_code 和result_code都为SUCCESS的时候有返回
+		
+		String prepay_id = result.get("prepay_id");
+		String mweb_url = result.get("mweb_url");
+		
+		renderText("prepay_id:"+prepay_id+" mweb_url:"+mweb_url);
+	}
+	
 	/**
 	 * 公众号支付
 	 * @TODO 待测试 o5NJx1dVRilQI6uUVSaBDuLnM3iM
@@ -361,10 +423,12 @@ log.info(xmlResult);
 		if (!PaymentKit.codeIsOK(return_code)) {
 			//通讯失败 
 			String err_code = result.get("err_code");
-			//用户支付中，需要输入密码
-			if (err_code.equals("USERPAYING")) {
-				//等待5秒后调用【查询订单API】https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_2
-				
+			if (StrKit.notBlank(err_code)) {
+				//用户支付中，需要输入密码
+				if (err_code.equals("USERPAYING")) {
+					//等待5秒后调用【查询订单API】https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_2
+					
+				}
 			}
 			log.info("提交刷卡支付失败>>"+xmlResult);
 			ajax.addError(return_msg);
