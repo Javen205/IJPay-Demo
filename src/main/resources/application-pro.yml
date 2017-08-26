@@ -1,0 +1,12 @@
+server:
+  port: 8081
+  servlet:
+    path: /
+age: 18
+name: Javen
+
+content: "age:${age},name: ${name}"
+
+boy:
+  age: 20
+  name: zhou
