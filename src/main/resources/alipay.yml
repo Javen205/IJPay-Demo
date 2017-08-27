@@ -1,0 +1,5 @@
+alipay.appId=xxx
+alipay.privateKey=xxx
+alipay.publicKey=xxx
+alipay.serverUrl=https://openapi.alipay.com/gateway.do
+alipay.notify_domain = xxx

@@ -6,7 +6,11 @@ spring:
     url: jdbc:mysql://localhost:3306/springboot
     username: root
     password: root
-  jpa:
-    hibernate:
-      ddl-auto: update
-      show-sql: true
+logging:
+  file: my.log
+  level: debug
+mybatis:
+  type-aliases-package: com.ijpay.entity
+  mapper-locations: classpath:mapper/*.xml
+
+

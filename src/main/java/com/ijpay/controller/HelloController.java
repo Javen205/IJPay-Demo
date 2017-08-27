@@ -1,19 +1,18 @@
 package com.ijpay.controller;
 
+import com.ijpay.entity.AliPayBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ijpay.entity.BoyProperties;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 public class HelloController {
+    private static final Logger log = LoggerFactory.getLogger(TemplateController.class);
+
+
     @Value("${age}")
     private Integer age;
 
@@ -23,18 +22,32 @@ public class HelloController {
     @Value("${content}")
     private String content;
 
+    @Value("${random}")
+    private String random;
+
 
     @Autowired
-    private BoyProperties boyProperties;
+    private AliPayBean aliPayBean;
 
     @RequestMapping("/")
     public String hello(){
+        log.error("测试日志...");
         return "Spring Boot Hello word!";
     }
 
     @RequestMapping(value = {"/say","/hi"},method = RequestMethod.GET)
     public String say(){
         return "Hello Spring Boot!";
+    }
+
+    @GetMapping(value = "/random")
+    public String random(){
+        return random;
+    }
+
+    @GetMapping(value = "/alipay")
+    public String alipay(){
+        return aliPayBean.toString();
     }
 
     @GetMapping(value = "/getYml")
@@ -45,11 +58,6 @@ public class HelloController {
     @GetMapping(value = "/getYml2")
     public String getYml2(){
         return content;
-    }
-
-    @GetMapping(value = "/getPorperties")
-    public String getProperties(){
-        return boyProperties.getName();
     }
 
     @RequestMapping(value = "/ss/{id}",method = RequestMethod.GET)
@@ -67,4 +75,7 @@ public class HelloController {
     public String param2(@RequestParam(value = "id",required = false ,defaultValue = "2") Integer xx){
         return  "id>"+xx;
     }
+
+
+
 }

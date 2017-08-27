@@ -7,7 +7,16 @@ age: 18
 name: Javen
 
 content: "age:${age},name: ${name}"
+random: "获取随机字符串:${random.value}  ,获取随机int:${random.int},获取10以内的随机数:${random.int(10)},获取10-20的随机数:${random.int[10,20]},获取随机long:${random.long},获取随机uuid:${random.uuid}"
 
 boy:
   age: 20
   name: javen.zhou
+
+spring:
+    thymeleaf:
+      cache: false #开启模板缓存（默认值：true）
+      check-template: true
+      check-template-location: true #检查模板位置是否正确（默认值:true）
+      content-type: text/html
+      mode: LEGACYHTML5
