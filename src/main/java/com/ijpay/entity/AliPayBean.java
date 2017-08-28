@@ -5,14 +5,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource( "classpath:alipay.yml")
-@ConfigurationProperties(prefix = "alipay")
+@PropertySource("classpath:/pro/alipay.properties")
+@ConfigurationProperties
 public class AliPayBean {
     private String appId;
     private String privateKey;
     private String publicKey;
     private String serverUrl;
-    private String notify_domain;
+    private String domain;
 
     public String getAppId() {
         return appId;
@@ -46,22 +46,24 @@ public class AliPayBean {
         this.serverUrl = serverUrl;
     }
 
-    public String getNotify_domain() {
-        return notify_domain;
-    }
+    
 
-    public void setNotify_domain(String notify_domain) {
-        this.notify_domain = notify_domain;
-    }
+	public String getDomain() {
+		return domain;
+	}
 
-    @Override
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	@Override
     public String toString() {
         return "AliPayBean{" +
                 "appId='" + appId + '\'' +
                 ", privateKey='" + privateKey + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", serverUrl='" + serverUrl + '\'' +
-                ", notify_domain='" + notify_domain + '\'' +
+                ", domain='" + domain + '\'' +
                 '}';
     }
 }

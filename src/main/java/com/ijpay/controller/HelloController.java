@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class HelloController {
-    private static final Logger log = LoggerFactory.getLogger(TemplateController.class);
+    private static final Logger log = LoggerFactory.getLogger(HelloController.class);
 
 
     @Value("${age}")
