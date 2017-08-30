@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:/pro/alipay.properties")
+@PropertySource("classpath:/production/alipay.properties")
 @ConfigurationProperties
 public class AliPayBean {
     private String appId;
