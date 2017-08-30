@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.ijpay.controller.weixin.entity.H5ScencInfo;
-import com.ijpay.controller.weixin.entity.H5ScencInfo.H5;
+import com.ijpay.weixin.entity.H5ScencInfo;
+import com.ijpay.weixin.entity.H5ScencInfo.H5;
 import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.PathKit;
@@ -36,7 +36,7 @@ public class WxPayController extends WxPayApiController {
 	private static final Prop prop = PropKit.use("wxpay.properties");
 	//商户相关资料
 	String appid = prop.get("appId");
-	String mch_id = prop.get("mch_id");
+	String mch_id = prop.get("mchId");
 	String partnerKey = prop.get("partnerKey");
 	String notify_url = prop.get("domain")+"/wxpay/pay_notify";
 	
@@ -110,7 +110,8 @@ log.info(xmlResult);
 		String prepay_id = result.get("prepay_id");
 		String mweb_url = result.get("mweb_url");
 		
-		renderText("prepay_id:"+prepay_id+" mweb_url:"+mweb_url);
+		System.out.println("prepay_id:"+prepay_id+" mweb_url:"+mweb_url);
+		redirect(mweb_url);
 	}
 	
 	/**

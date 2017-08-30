@@ -1,4 +1,4 @@
-package com.ijpay.controller.weixin.entity;
+package com.ijpay.weixin.entity;
 
 import com.jfinal.kit.JsonKit;
 

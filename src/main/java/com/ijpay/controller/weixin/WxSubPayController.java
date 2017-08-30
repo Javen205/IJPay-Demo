@@ -33,9 +33,9 @@ public class WxSubPayController extends WxPayApiController {
 	private static final Prop prop = PropKit.use("wxsubpay.properties");
 	//商户相关资料
 	String appid = prop.get("appId");
-	String mch_id = prop.get("mch_id");
-	String sub_mch_id = prop.get("sub_mch_id");
-	String sub_appid = prop.get("sub_appid");
+	String mch_id = prop.get("mchId");
+	String sub_mch_id = prop.get("subMchId");
+	String sub_appid = prop.get("subAppid");
 	String partnerKey = prop.get("partnerKey");
 	String notify_url = prop.get("domain")+"/wxsubpay/pay_notify";
 	String certPath = prop.get("certPath");

@@ -35,11 +35,11 @@ public class AliPayController extends AliPayApiController {
 	private  final Prop prop = PropKit.use("alipay.properties");
 	private  String charset = "UTF-8";
 	private  String private_key = prop.get("privateKey");
-	private  String alipay_public_key = prop.get("alipayPulicKey");
+	private  String alipay_public_key = prop.get("publicKey");
 	private  String service_url = prop.get("serverUrl");
 	private  String app_id = prop.get("appId");
 	private  String sign_type = "RSA2";
-	private  String notify_domain = prop.get("notify_domain");
+	private  String notify_domain = prop.get("domain");
 	
 	private AjaxResult result = new AjaxResult();
 
