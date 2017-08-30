@@ -61,6 +61,7 @@ public class WxPayController extends WxPayApiController {
 	
 	/**
 	 * 微信H5 支付
+	 * 注意：必须再web页面中发起支付且域名已添加到开发配置中
 	 */
 	public void wapPay(){
 		String ip = IpKit.getRealIp(getRequest());
@@ -72,6 +73,7 @@ public class WxPayController extends WxPayApiController {
 		
 		H5 h5_info = new H5();
 		h5_info.setType("Wap");
+		//此域名必须在商户平台--"产品中心"--"开发配置"中添加
 		h5_info.setWap_url("https://pay.qq.com");
 		h5_info.setWap_name("腾讯充值");
 		sceneInfo.setH5_info(h5_info);
@@ -85,10 +87,9 @@ public class WxPayController extends WxPayApiController {
 				.setNotifyUrl(notify_url)
 				.setOutTradeNo(String.valueOf(System.currentTimeMillis()))
 				.setSceneInfo(h5_info.toString())
-				.setPaternerKey("25861652f3d3acb8b586d4c789022ad8")
 				.build();
 		
-		String xmlResult = WxPayApi.pushOrder(true,params);
+		String xmlResult = WxPayApi.pushOrder(false,params);
 log.info(xmlResult);
 		Map<String, String> result = PaymentKit.xmlToMap(xmlResult);
 		

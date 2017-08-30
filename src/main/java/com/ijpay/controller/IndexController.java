@@ -40,6 +40,10 @@ public class IndexController extends Controller {
 	public void toPayInput(){
 		render("pay_input_money.html");
 	}
+	
+	public void toWxH5Pay(){
+		render("wxh5pay.html");
+	}
 	public void suc(){
 		
 	}
