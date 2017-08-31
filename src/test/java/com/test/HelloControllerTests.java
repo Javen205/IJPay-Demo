@@ -2,7 +2,7 @@ package com.test;
 
 
 import com.ijpay.DemoApplication;
-import com.ijpay.controller.HelloController;
+import com.ijpay.controller.IndexController;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class HelloControllerTests {
     @Before
     public void setUp() {
         //独立安装测试
-        mockMvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new IndexController()).build();
         //集成Web环境测试（此种方式并不会集成真正的web环境，而是通过相应的Mock API进行模拟测试，无须启动服务器）
         //mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }

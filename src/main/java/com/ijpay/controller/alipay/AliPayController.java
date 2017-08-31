@@ -46,7 +46,7 @@ public class AliPayController extends AliPayApiController {
 				.build();
 	}
 	
-	@RequestMapping("/")
+	@RequestMapping("")
 	@ResponseBody
 	public String index() {
 		return "欢迎使用IJPay 中的支付宝支付 -By Javen";
