@@ -21,15 +21,39 @@ public class IndexController {
     	log.info("欢迎使用IJPay 开发加群148540125交流 -By Javen");
     	return "欢迎使用IJPay 开发加群148540125交流 -By Javen";
     }
+    @RequestMapping("/toWxH5Pay")
+    public String toWxH5Pay(){
+		return "wxh5pay.html";
+	}
     
-    @RequestMapping(value = "/aadd")
+    @RequestMapping("/towxpay")
+    public String towxpay() {
+		return "wxpay.html";
+	}
+    @RequestMapping("/towxsubpay")
+	public String towxsubpay() {
+		return "wxsubpay.html";
+	}
+    
+    
+    
+    @RequestMapping(value = "/pay_input_money")
     public ModelAndView pay_input_money(){
-    	 ModelAndView mav = new ModelAndView("static/pay_input_money.html");
+    	 ModelAndView mav = new ModelAndView("pay_input_money.html");
          mav.addObject("content", "xxx");
          return mav;
     }
+    @RequestMapping(value = "/pay_select_money")
+    public String pay_select_money(){
+    	return "pay_select_money";
+    }
     
 
+    @RequestMapping("/success")
+	public String success() {
+		return "success.html";
+	}
+    
     
     @RequestMapping(value = "/ss/{id}",method = RequestMethod.GET)
     @ResponseBody

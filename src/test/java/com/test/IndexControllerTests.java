@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = DemoApplication.class)
-public class HelloControllerTests {
+public class IndexControllerTests {
 
     //mock api 模拟http请求
     private MockMvc mockMvc;
@@ -34,10 +34,10 @@ public class HelloControllerTests {
     //测试
     @Test
     public void index() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/say")
+        mockMvc.perform(MockMvcRequestBuilders.get("/xxx")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Hello Spring Boot!")));
+                .andExpect(content().string(equalTo("id>2")));
     }
 
 

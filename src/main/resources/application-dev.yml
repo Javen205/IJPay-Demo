@@ -3,11 +3,3 @@ server:
   servlet:
     path: /
 
-
-spring:
-    thymeleaf:
-      cache: false #开启模板缓存（默认值：true）
-      check-template: true
-      check-template-location: true #检查模板位置是否正确（默认值:true）
-      content-type: text/html
-      mode: LEGACYHTML5

@@ -7,7 +7,7 @@ spring:
     username: root
     password: root
 logging:
-  file: my.log
+  file: ijpay.log
   level: debug
 mybatis:
   type-aliases-package: com.ijpay.entity
