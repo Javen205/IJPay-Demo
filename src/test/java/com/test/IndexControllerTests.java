@@ -1,7 +1,7 @@
 package com.test;
 
 
-import com.ijpay.DemoApplication;
+import com.DemoApplication;
 import com.ijpay.controller.IndexController;
 
 import org.junit.Before;

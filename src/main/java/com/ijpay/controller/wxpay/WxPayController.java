@@ -80,7 +80,7 @@ public class WxPayController extends WxPayApiController {
 	 * 微信H5 支付
 	 * 注意：必须再web页面中发起支付且域名已添加到开发配置中
 	 */
-	@RequestMapping("/wapPay")
+	@RequestMapping(value ="/wapPay",method = {RequestMethod.POST,RequestMethod.GET})
 	public void wapPay(HttpServletRequest request,HttpServletResponse response){
 		String ip = IpKit.getRealIp(request);
 		if (StrKit.isBlank(ip)) {
@@ -140,7 +140,7 @@ log.info(xmlResult);
 	/**
 	 * 公众号支付
 	 */
-	@RequestMapping(value ="/webPay",method = RequestMethod.POST)
+	@RequestMapping(value ="/webPay",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public AjaxResult webPay(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam("total_fee") String total_fee) {
@@ -201,7 +201,7 @@ log.info(xmlResult);
 	/**
 	 * 生成支付二维码（模式一）并在页面上显示
 	 */
-	@RequestMapping(value ="/scanCode1",method = RequestMethod.POST)
+	@RequestMapping(value ="/scanCode1",method ={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public AjaxResult scanCode1(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam("productId") String product_id){
@@ -240,7 +240,7 @@ log.info(xmlResult);
 	 * 扫码支付模式一回调
 	 * 已测试
 	 */
-	@RequestMapping(value ="/wxpay",method = RequestMethod.POST)
+	@RequestMapping(value ="/wxpay",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public String wxpay(HttpServletRequest request,HttpServletResponse response){
 		try {
@@ -342,7 +342,7 @@ log.info(xmlResult);
 	 * 扫码支付模式二
 	 * 已测试
 	 */
-	@RequestMapping(value ="/scanCode2",method = RequestMethod.POST)
+	@RequestMapping(value ="/scanCode2",method = {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public AjaxResult scanCode2(HttpServletRequest request,HttpServletResponse response,
 			@RequestParam("total_fee") String total_fee) {
@@ -419,7 +419,7 @@ log.info(xmlResult);
 	 * 刷卡支付
 	 * 已测试
 	 */
-	@RequestMapping(value = "/micropay",method= RequestMethod.POST)
+	@RequestMapping(value = "/micropay",method= {RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public AjaxResult micropay(HttpServletRequest request,HttpServletResponse response){
 		String auth_code = request.getParameter("auth_code");
