@@ -5,12 +5,7 @@ import com.ijpay.controller.alipay.AliPayController;
 import com.ijpay.controller.weixin.WxOauthController;
 import com.ijpay.controller.weixin.WxPayController;
 import com.ijpay.controller.weixin.WxSubPayController;
-import com.jfinal.config.Constants;
-import com.jfinal.config.Handlers;
-import com.jfinal.config.Interceptors;
-import com.jfinal.config.JFinalConfig;
-import com.jfinal.config.Plugins;
-import com.jfinal.config.Routes;
+import com.jfinal.config.*;
 import com.jfinal.core.JFinal;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.kit.PropKit;
@@ -128,6 +123,13 @@ public class APPConfig extends JFinalConfig {
 	 */
 	public static void main(String[] args) {
 		JFinal.start("src/main/webapp", 8088, "/", 5);// 启动配置项
+		/**
+		 * 特别注意：
+		 * 1、IDEA 推荐使用Plugins中的jetty插件启动
+		 * 2、如果想直接运行APPConfig需要做如下配置
+		 * IDEA 下直接启动需要去掉最后一个参数并将pom.xml中jetty-server的scope去掉
+		 */
+		// JFinal.start("src/main/webapp", 80, "/");
 	}
 
 	@Override

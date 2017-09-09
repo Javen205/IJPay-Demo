@@ -1,8 +1,8 @@
-# IJPay
+# 🔥  IJPay JFinal Bemo
 
-[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![](https://jitpack.io/v/javen205/IJPay.svg)](https://jitpack.io/#javen205/IJPay)
-[![QQ](http://pub.idqqimg.com/wpa/images/group.png)](https://jq.qq.com/?_wv=1027&k=47koFFR)
+[![License][licensesvg]][license]
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.javen205/IJPay/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.javen205/IJPay)
+
 
 GitHub：[https://github.com/Javen205/IJPay](https://github.com/Javen205/IJPay)
 
@@ -23,16 +23,16 @@ Demo:
 
 - 微信支付效果图
 
-| 微信商户下各种支付演示Demo              | 微信服务商户下各种支付演示Demo     |
-|:------------------------------:|:---------------------------------:|
-|![](doc/img/wxpay.gif) | ![](doc/img/wxsubpay.gif) |
+|    微信商户下各种支付演示Demo     |     微信服务商户下各种支付演示Demo     |
+| :--------------------: | :-----------------------: |
+| ![](doc/img/wxpay.gif) | ![](doc/img/wxsubpay.gif) |
 
 
 - 支付宝测试截图
 
-| 支付宝测试截图一             					 | 支付宝测试截图二     						 |支付宝测试截图三|
-|:------------------------------:|:---------------------------------:|:---------------------------------:|
-|![](doc/img/alipay_test1.png) 	 | ![](doc/img/alipay_test2.png)	 |![](doc/img/alipay_test3.png)		 |
+  |           支付宝测试截图一            |           支付宝测试截图二            |           支付宝测试截图三            |
+  | :---------------------------: | :---------------------------: | :---------------------------: |
+  | ![](doc/img/alipay_test1.png) | ![](doc/img/alipay_test2.png) | ![](doc/img/alipay_test3.png) |
 
 
 ### 功能列表
@@ -53,7 +53,6 @@ Demo:
     - [x] 关闭订单
     - [x] 下载对账单
     - [x] 转换短链接
-    
 
 
   - 服务商版
@@ -136,7 +135,45 @@ Demo:
 8. 感谢第三方公司提供微信商户平台测试
 
 
+
+
+### 联系方式
+
+
+
+[![QQ0Group][qq0groupsvg]][qq0group]
+
+Email:javendev@126.com
+
+
+
+[qq0groupsvg]: https://img.shields.io/badge/QQ群-148540125-fba7f9.svg
+[qq0group]: http://qm.qq.com/cgi-bin/qm/qr?k=7Vs725Nh0KVAsGFCodeGyMQTLYuEHeXy
+
+
+
+[licensesvg]: https://img.shields.io/badge/License-Apache--2.0-brightgreen.svg
+[license]: https://github.com/Javen205/IJPay-Demo/blob/master/LICENSE
+
+### 最后如果该库对你有帮助不妨对右上角点点 Star 对我支持 ， 感谢万分 ! 当然我更喜欢你 Fork PR 成为项目贡献者 . [IJPay](https://github.com/Javen205/IJPay)  
+
 >如果对你有帮助,请任意打赏支持
 
-
 <img src="http://img.blog.csdn.net/20170425211154361?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvenl3X2phdmE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" width = "300" alt="任意打赏" align=center />
+
+## License
+```
+Copyright (C)  Javen205(https://github.com/Javen205/IJPay)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
