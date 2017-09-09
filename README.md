@@ -153,7 +153,7 @@ Email:javendev@126.com
 
 
 [licensesvg]: https://img.shields.io/badge/License-Apache--2.0-brightgreen.svg
-[license]: https://github.com/Javen205/IJPay-Demo/blob/master/LICENSE
+[license]: https://www.apache.org/licenses/LICENSE-2.0
 
 ### 最后如果该库对你有帮助不妨对右上角点点 Star 对我支持 ， 感谢万分 ! 当然我更喜欢你 Fork PR 成为项目贡献者 . [IJPay](https://github.com/Javen205/IJPay)  
 
