@@ -1,4 +1,4 @@
-# 🔥  IJPay Spring-Boot Bemo
+# 🔥  IJPay Spring-Boot Demo
 
 [![License][licensesvg]][license]
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.javen205/IJPay/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.javen205/IJPay)
