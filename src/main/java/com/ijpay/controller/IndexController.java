@@ -41,6 +41,10 @@ public class IndexController extends Controller {
 		render("pay_input_money.html");
 	}
 	
+	public void pay_keyboard(){
+		render("pay_keyboard.html");
+	}
+	
 	public void toWxH5Pay(){
 		render("wxh5pay.html");
 	}
