@@ -78,7 +78,9 @@ Demo:
 
 >如果对你有帮助,请任意打赏支持
 
-<img src="http://img.blog.csdn.net/20170425211154361?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvenl3X2phdmE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" width = "300" alt="任意打赏" align=center />
+|    微信打赏     |     支付宝打赏     |
+| :--------------------: | :-----------------------: |
+| ![](assets/img/wxpay.png) | ![](assets/img/apayn.png) |
 
 ## License
 ```
