@@ -2,10 +2,16 @@ package com.ijpay;
 
 import com.ijpay.controller.IndexController;
 import com.ijpay.controller.alipay.AliPayController;
+import com.ijpay.controller.unionpay.UnionPayController;
 import com.ijpay.controller.weixin.WxOauthController;
 import com.ijpay.controller.weixin.WxPayController;
 import com.ijpay.controller.weixin.WxSubPayController;
-import com.jfinal.config.*;
+import com.jfinal.config.Constants;
+import com.jfinal.config.Handlers;
+import com.jfinal.config.Interceptors;
+import com.jfinal.config.JFinalConfig;
+import com.jfinal.config.Plugins;
+import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.kit.PropKit;
@@ -14,6 +20,7 @@ import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
+import com.jpay.unionpay.SDKConfig;
 
 
 /**
@@ -61,6 +68,7 @@ public class APPConfig extends JFinalConfig {
 		me.add("/alipay", AliPayController.class);
 		me.add("/wxpay", WxPayController.class);
 		me.add("/wxsubpay", WxSubPayController.class);
+		me.add("/unionpay", UnionPayController.class);
 		
 	}
 
@@ -98,6 +106,8 @@ public class APPConfig extends JFinalConfig {
 	public void afterJFinalStart() {
 		log.info("afterJFinalStart");
 		ApiConfigKit.putApiConfig(getApiConfig());
+		//银联加载配置
+		SDKConfig.getConfig().loadPropertiesFromSrc();// 从classpath加载acp_sdk.properties文件
 	}
 
 	public ApiConfig getApiConfig() {
@@ -122,7 +132,7 @@ public class APPConfig extends JFinalConfig {
 	 * 方法可以启动项目，此main方法可以放置在任意的Class类定义中，不一定要放于此
 	 */
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 8088, "/", 5);// 启动配置项
+		JFinal.start("src/main/webapp", 8080, "/", 5);// 启动配置项
 		/**
 		 * 特别注意：
 		 * 1、IDEA 推荐使用Plugins中的jetty插件启动

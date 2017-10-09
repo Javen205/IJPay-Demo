@@ -21,7 +21,6 @@ public class WxPayApiInterceptor implements Interceptor {
 			inv.invoke();
 		}
 		finally {
-			WxPayApiConfigKit.removeThreadLocalApiConfig();
 		}
 	}
 

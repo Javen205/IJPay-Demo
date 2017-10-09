@@ -106,6 +106,13 @@
 			<systemPath>${project.basedir}/libs/alipay-sdk-java20170725114550.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>com.unionpay</groupId>
+			<artifactId>unionpay-sdk-java</artifactId>
+			<version>1.54</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/bcprov-jdk15on-1.54.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
@@ -113,7 +120,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.4</version>
+			<version>0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.base64</groupId>

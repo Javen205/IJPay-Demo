@@ -23,7 +23,6 @@ public class AliPayApiInterceptor implements Interceptor {
 			inv.invoke();
 		}
 		finally {
-			AliPayApiConfigKit.removeThreadLocalApiConfig();
 		}
 	}
 
