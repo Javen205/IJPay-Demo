@@ -138,8 +138,8 @@ public class UnionPayController extends Controller {
 				log.error("未获取到返回报文或返回http状态码非200");
 				ajax.addError("未获取到返回报文或返回http状态码非200");
 			}
-			String reqMessage = genHtmlResult(reqData);
-			String rspMessage = genHtmlResult(rspData);
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
 			log.info("app>reqMessage>>>" + reqMessage + " rspMessage>>>" + rspMessage);
 			renderJson(ajax);
 		} catch (Exception e) {
@@ -184,8 +184,8 @@ public class UnionPayController extends Controller {
 			//未返回正确的http状态
 			log.error("未获取到返回报文或返回http状态码非200");
 		}
-		String reqMessage = genHtmlResult(reqData);
-		String rspMessage = genHtmlResult(rspData);
+		String reqMessage = getHtmlResult(reqData);
+		String rspMessage = getHtmlResult(rspData);
 		renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
 	}
 	
@@ -229,8 +229,8 @@ public class UnionPayController extends Controller {
 			//未返回正确的http状态
 			log.error("未获取到返回报文或返回http状态码非200");
 		}
-		String reqMessage = genHtmlResult(reqData);
-		String rspMessage = genHtmlResult(rspData);
+		String reqMessage = getHtmlResult(reqData);
+		String rspMessage = getHtmlResult(rspData);
 		renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
 	}
 	
@@ -247,7 +247,7 @@ public class UnionPayController extends Controller {
 				.setBackUrl(SDKConfig.getConfig().getBackUrl())
 				.setOrigQryId("201710061443208788498") //****原消费交易返回的的queryId，可以从消费交易后台通知接口中或者交易状态查询接口中获取
 				.createMap();
-		Map<String, String> rspData = UnionPayApi.refundByMap(reqData);
+		Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
 		if(!rspData.isEmpty()){
 			if(AcpService.validate(rspData, "UTF-8")){
 				log.info("验证签名成功");
@@ -270,24 +270,36 @@ public class UnionPayController extends Controller {
 			log.error("未获取到返回报文或返回http状态码非200");
 		}
 		
-		String reqMessage = genHtmlResult(reqData);
-		String rspMessage = genHtmlResult(rspData);
+		String reqMessage = getHtmlResult(reqData);
+		String rspMessage = getHtmlResult(rspData);
 		renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
 	}
 	/**
-	 * 测试未通过
+	 * 测试通过
+	 * https://open.unionpay.com/ajweb/help/faq/list?id=95&level=0&from=0
 	 * java.lang.RuntimeException: Unexpected code Response{protocol=http/1.1, code=500, message=Internal Server Error, url=https://filedownload.test.95516.com/}
 	 */
 	public void fileTransfer(){
-		String settleDate = DateKit.toStr(new Date(), DateKit.UnionDateStampPattern);
+//		String settleDate = DateKit.toStr(new Date(), DateKit.UnionDateStampPattern);
 		Map<String, String> reqData = UnionPayApiConfig.builder()
+				.setAccessType("0")
 				.setTxnType("76")  //交易类型 76-对账文件下载
 				.setTxnSubType("01") //交易子类型 01-对账文件下载
 				.setBizType("000000") //业务类型，固定
-				.setMerId("777290058151764")
+				.setMerId("700000000000001")
 				.setSettleDate("0119") //清算日期，如果使用正式商户号测试则要修改成自己想要获取对账文件的日期， 测试环境如果使用777290058151764商户号则固定填写0119
 				.setFileType("00")
 				.createMap();
+		//移除默认参数
+		reqData.remove("orderId");
+		reqData.remove("payTimeout");
+		reqData.remove("backUrl");
+		reqData.remove("channelType");
+		reqData.remove("currencyCode");
+		reqData.remove("frontUrl");
+		reqData.remove("txnAmt");
+		//重新签名
+		reqData = UnionPayApiConfig.builder().setSignMap(reqData);
 		Map<String, String> rspData = UnionPayApi.fileTransferByMap(reqData);
 		String fileContentDispaly = "";
 		if(!rspData.isEmpty()){
@@ -295,7 +307,8 @@ public class UnionPayController extends Controller {
 				log.info("验证签名成功");
 				String respCode = rspData.get("respCode");
 				if("00".equals(respCode)){
-					String outPutDirectory ="/Users/Javen/Documents/dev/JPay";
+//					String outPutDirectory ="/Users/Javen/Documents/dev/JPay";
+					String outPutDirectory ="d:\\";
 					// 交易成功，解析返回报文中的fileContent并落地
 					String zipFilePath = AcpService.deCodeFileContent(rspData,outPutDirectory,DemoBase.encoding);
 					//对落地的zip文件解压缩并解析
@@ -324,8 +337,8 @@ public class UnionPayController extends Controller {
 			log.error("未获取到返回报文或返回http状态码非200");
 		}
 		
-		String reqMessage = genHtmlResult(reqData);
-		String rspMessage = genHtmlResult(rspData);
+		String reqMessage = getHtmlResult(reqData);
+		String rspMessage = getHtmlResult(rspData);
 		renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+fileContentDispaly);
 	
 	}
@@ -362,7 +375,189 @@ public class UnionPayController extends Controller {
 		renderNull();
 	}
 	
+	/**
+	 * 二维码支付
+	 * 二维码仿真
+	 * https://open.unionpay.com/ajweb/help/qrcodeFormPage
+	 */
+	public void qrCodePay(){
+		try {
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("01")
+					.setTxnSubType("06")
+					.setBizType("000000")
+					.setChannelType("08") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setQrNo("6225058203886110875")
+					.setTermId("00000011")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setTxnAmt("2580")
+					.setBackUrl(SDKConfig.getConfig().getBackUrl())
+					.setReqReserved("IJPay qrCodePay")
+					.createMap();
+			Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
+			if(!rspData.isEmpty()){
+				if(AcpService.validate(rspData, DemoBase.encoding)){
+					LogUtil.writeLog("二维码支付验证签名成功");
+					String respCode = rspData.get("respCode") ;
+					if(("00").equals(respCode)){
+						//成功,获取tn号
+						String tn = rspData.get("tn");
+						System.out.println("tn>>>>>>>"+tn);
+					}else{
+						//其他应答码为失败请排查原因或做失败处理
+					}
+				}else{
+					LogUtil.writeErrorLog("二维码验证签名失败");
+					//检查验证签名失败的原因
+				}
+			}else{
+				//未返回正确的http状态
+				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+			}
+			
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
+			renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
+	/**
+	 * 代收后台建立委托
+	 */
+	public void jlwtback(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6221558812340000", "UTF-8"); 		//这里测试的时候使用的是测试卡号，正式环境请使用真实卡号
+
+			//姓名，证件类型+证件号码至少二选一必送，手机号可选，贷记卡的cvn2,expired可选。
+			Map<String,String> customerInfoMap = new HashMap<String,String>();
+			customerInfoMap.put("certifTp", "01");//证件类型
+			customerInfoMap.put("certifId", "341126197709218366");//证件号码
+			customerInfoMap.put("customerNm", "互联网");//姓名
+			
+			customerInfoMap.put("phoneNo", "13552535506");//手机号
+			//当卡号为贷记卡的时候cvn2,expired可选上送
+			customerInfoMap.put("cvn2", "123");//卡背面的cvn2三位数字
+			customerInfoMap.put("expired", "1711");
+			
+//			String customerInfoStr = AcpService.
+//					getCustomerInfoWithEncrypt(customerInfoMap,null,DemoBase.encoding);
+			String customerInfoStr = AcpService.
+					getCustomerInfo(customerInfoMap,null,DemoBase.encoding);
+			
+			
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("72")
+					.setTxnSubType("11")
+					.setBizType("000501")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.setCustomerInfo(customerInfoStr)
+					.createMap();
+			Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
+			if(!rspData.isEmpty()){
+				if(AcpService.validate(rspData, DemoBase.encoding)){
+					LogUtil.writeLog("验证签名成功");
+					String respCode = rspData.get("respCode") ;
+					if(("00").equals(respCode)){
+						//成功,获取tn号
+						String tn = rspData.get("tn");
+						System.out.println("tn>>>>>>>"+tn);
+					}else{
+						//其他应答码为失败请排查原因或做失败处理
+					}
+				}else{
+					LogUtil.writeErrorLog("验证签名失败");
+					//检查验证签名失败的原因
+				}
+			}else{
+				//未返回正确的http状态
+				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+			}
+			
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
+			renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * 代收后台建立委托
+	 */
+	public void daiShou1102(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6216261000000000018", DemoBase.encoding);
+
+			
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("11")
+					.setTxnSubType("02")
+					.setBizType("000501")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.createMap();
+			Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
+			
+			if(!rspData.isEmpty()){
+				if(AcpService.validate(rspData, DemoBase.encoding)){
+					LogUtil.writeLog("验证签名成功");
+					String respCode = rspData.get("respCode") ;
+					if(("00").equals(respCode)){
+						//交易已受理(不代表交易已成功），等待接收后台通知更新订单状态,也可以主动发起 查询交易确定交易状态。
+						//如果是配置了敏感信息加密，如果需要获取卡号的铭文，可以按以下方法解密卡号
+						//String accNo1 = resmap.get("accNo");
+						//String accNo2 = AcpService.decryptData(accNo1, "UTF-8");  //解密卡号使用的证书是商户签名私钥证书acpsdk.signCert.path
+						//LogUtil.writeLog("解密后的卡号："+accNo2);
+						
+					}else if(("03").equals(respCode)||
+							 ("04").equals(respCode)||
+							 ("05").equals(respCode)){
+						//后续需发起交易状态查询交易确定交易状态
+					}else{
+						//其他应答码为失败请排查原因
+					}
+				}else{
+					LogUtil.writeErrorLog("验证签名失败");
+					//检查验证签名失败的原因
+				}
+			}else{
+				//未返回正确的http状态
+				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+			}
+			
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
+			renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	
 	/**
 	 * 后台回调
 	 */
@@ -477,7 +672,7 @@ public class UnionPayController extends Controller {
 	 * @param data
 	 * @return {String}
 	 */
-	public static String genHtmlResult(Map<String, String> data) {
+	public static String getHtmlResult(Map<String, String> data) {
 
 		TreeMap<String, String> tree = new TreeMap<String, String>();
 		Iterator<Entry<String, String>> it = data.entrySet().iterator();
