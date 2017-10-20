@@ -56,7 +56,7 @@ public class UnionPayController extends Controller {
 //					.setFrontUrl(SDKConfig.getConfig().getFrontUrl()) 有默认值
 //					.setBackUrl(SDKConfig.getConfig().getBackUrl()) 有默认值
 					.createMap();
-			UnionPayApi.frontConsume(getResponse(), createMap);
+			UnionPayApi.frontRequest(getResponse(), createMap);
 			renderNull();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class UnionPayController extends Controller {
 					.setTxnAmt("2222")
 					.setReqReserved("reqReserved")
 					.createMap();
-			UnionPayApi.frontConsume(getResponse(), createMap);
+			UnionPayApi.frontRequest(getResponse(), createMap);
 			renderNull();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,7 +95,7 @@ public class UnionPayController extends Controller {
 					.setFrontUrl(SDKConfig.getConfig().getFrontUrl())
 					.setBackUrl(SDKConfig.getConfig().getBackUrl())
 					.createMap();
-			UnionPayApi.frontConsume(getResponse(), createMap);
+			UnionPayApi.frontRequest(getResponse(), createMap);
 			renderNull();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -154,9 +154,12 @@ public class UnionPayController extends Controller {
 		Map<String, String> reqData = UnionPayApiConfig.builder()
 				.setTxnType("00")
 				.setTxnSubType("00")
+				.setBizType("000301")
 				.setMerId("777290058151764")
-				.setOrderId("1507214190872")
-				.setTxnTime("20171005223630")
+//				.setOrderId("1507214190872")
+//				.setTxnTime("20171005223630")
+				.setOrderId("1508488509626")
+				.setTxnTime("20171020163509")
 				.createMap();
 		Map<String, String> rspData = UnionPayApi.singleQueryByMap(reqData);
 		if(!rspData.isEmpty()){
@@ -431,7 +434,7 @@ public class UnionPayController extends Controller {
 	/**
 	 * 代收后台建立委托
 	 */
-	public void jlwtback(){
+	public void jlwtBack(){
 		try {
 			//卡号
 			String accNoEnc = AcpService.encryptData("6221558812340000", "UTF-8"); 		//这里测试的时候使用的是测试卡号，正式环境请使用真实卡号
@@ -447,10 +450,10 @@ public class UnionPayController extends Controller {
 			customerInfoMap.put("cvn2", "123");//卡背面的cvn2三位数字
 			customerInfoMap.put("expired", "1711");
 			
-//			String customerInfoStr = AcpService.
-//					getCustomerInfoWithEncrypt(customerInfoMap,null,DemoBase.encoding);
 			String customerInfoStr = AcpService.
-					getCustomerInfo(customerInfoMap,null,DemoBase.encoding);
+					getCustomerInfoWithEncrypt(customerInfoMap,null,DemoBase.encoding);
+//			String customerInfoStr = AcpService.
+//					getCustomerInfo(customerInfoMap,null,DemoBase.encoding);
 			
 			
 			Map<String, String> reqData = UnionPayApiConfig.builder()
@@ -497,13 +500,107 @@ public class UnionPayController extends Controller {
 		
 	}
 	
+	
 	/**
-	 * 代收后台建立委托
+	 * 代收前台建立委托
+	 */
+	public void jlwtFront(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6221558812340000", "UTF-8"); 		//这里测试的时候使用的是测试卡号，正式环境请使用真实卡号
+
+			//姓名，证件类型+证件号码至少二选一必送，手机号可选，贷记卡的cvn2,expired可选。
+			Map<String,String> customerInfoMap = new HashMap<String,String>();
+			customerInfoMap.put("certifTp", "01");//证件类型
+			customerInfoMap.put("certifId", "341126197709218366");//证件号码
+			customerInfoMap.put("customerNm", "互联网");//姓名
+			
+			customerInfoMap.put("phoneNo", "13552535506");//手机号
+			//当卡号为贷记卡的时候cvn2,expired可选上送
+			customerInfoMap.put("cvn2", "123");//卡背面的cvn2三位数字
+			customerInfoMap.put("expired", "1711");
+			
+			String customerInfoStr = AcpService.
+					getCustomerInfoWithEncrypt(customerInfoMap,null,DemoBase.encoding);
+//			String customerInfoStr = AcpService.
+//					getCustomerInfo(customerInfoMap,null,DemoBase.encoding);
+			
+			
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("72")
+					.setTxnSubType("11")
+					.setBizType("000501")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setBackUrl(SDKConfig.getConfig().getBackUrl())
+					.setFrontUrl(SDKConfig.getConfig().getFrontUrl())
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.setCustomerInfo(customerInfoStr)
+					.createMap();
+			UnionPayApi.frontRequest(getResponse(), reqData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		renderNull();
+	}
+	/**
+	 * 解除委托关系
+	 */
+	public void removeWt(){
+		try {
+			//这里测试的时候使用的是测试卡号，正式环境请使用真实卡号
+			String accNoEnc = AcpService.encryptData("6221558812340000", "UTF-8");
+
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("74")
+					.setTxnSubType("04")
+					.setBizType("000501")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.createMap();
+			Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
+			if(!rspData.isEmpty()){
+				if(AcpService.validate(rspData, DemoBase.encoding)){
+					LogUtil.writeLog("验证签名成功");
+					String respCode = rspData.get("respCode") ;
+					if(("00").equals(respCode)){
+						//成功
+					}else{
+						//其他应答码为失败请排查原因或做失败处理
+					}
+				}else{
+					LogUtil.writeErrorLog("验证签名失败");
+					//检查验证签名失败的原因
+				}
+			}else{
+				//未返回正确的http状态
+				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+			}
+			
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
+			renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 代收1102
 	 */
 	public void daiShou1102(){
 		try {
 			//卡号
-			String accNoEnc = AcpService.encryptData("6216261000000000018", DemoBase.encoding);
+			String accNoEnc = AcpService.encryptData("6221558812340000", DemoBase.encoding);
 
 			
 			Map<String, String> reqData = UnionPayApiConfig.builder()
@@ -514,6 +611,7 @@ public class UnionPayController extends Controller {
 					.setMerId("777290058151764")
 					.setAccessType("0")
 					.setAccType("01")
+					.setTxnAmt("8888")
 					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
 					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
 					.setAccNo(accNoEnc)
@@ -555,6 +653,140 @@ public class UnionPayController extends Controller {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * 无跳转开通状态查询
+	 */
+	public void openQuery(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6216261000000000018", DemoBase.encoding);
+
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("78")
+					.setTxnSubType("00")
+					.setBizType("000301")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.createMap();
+			Map<String, String> rspData = UnionPayApi.backRequestByMap(reqData);
+			StringBuffer parseStr = new StringBuffer("");
+			if(!rspData.isEmpty()){
+				if(AcpService.validate(rspData, DemoBase.encoding)){
+					LogUtil.writeLog("验证签名成功");
+					String respCode = rspData.get("respCode") ;
+					if(("00").equals(respCode)){
+						//成功
+						parseStr.append("<br>解析敏感信息加密信息如下（如果有）:<br>");
+						String customerInfo = rspData.get("customerInfo");
+						if(null!=customerInfo){
+							Map<String,String>  cm = AcpService.parseCustomerInfo(customerInfo, "UTF-8");
+							parseStr.append("customerInfo明文: " + cm+"<br>");
+						}
+						String an = rspData.get("accNo");
+						if(null!=an){
+							an = AcpService.decryptData(an, "UTF-8");
+							parseStr.append("accNo明文: " + an);
+						}
+					}else{
+						//其他应答码为失败请排查原因或做失败处理
+					}
+				}else{
+					LogUtil.writeErrorLog("验证签名失败");
+					// 检查验证签名失败的原因
+				}
+			}else{
+				//未返回正确的http状态
+				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+			}
+			String reqMessage = getHtmlResult(reqData);
+			String rspMessage = getHtmlResult(rspData);
+			renderHtml("</br>请求报文:<br/>"+reqMessage+"<br/>" + "应答报文:</br>"+rspMessage+parseStr);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 无跳转支付银联侧开通
+	 */
+	public void openCardFront(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6216261000000000018", "UTF-8"); 		//这里测试的时候使用的是测试卡号，正式环境请使用真实卡号
+
+			//姓名，证件类型+证件号码至少二选一必送，手机号可选，贷记卡的cvn2,expired可选。
+			Map<String,String> customerInfoMap = new HashMap<String,String>();
+			customerInfoMap.put("certifTp", "01");//证件类型
+			customerInfoMap.put("certifId", "341126197709218366");//证件号码
+			customerInfoMap.put("customerNm", "全渠道");//姓名
+			customerInfoMap.put("phoneNo", "13552535506");//手机号
+			
+			String customerInfoStr = AcpService.
+					getCustomerInfoWithEncrypt(customerInfoMap,null,DemoBase.encoding);
+//			String customerInfoStr = AcpService.
+//					getCustomerInfo(customerInfoMap,null,DemoBase.encoding);
+			
+			
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("79")
+					.setTxnSubType("01")
+					.setBizType("000301")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setBackUrl(SDKConfig.getConfig().getBackUrl())
+					.setFrontUrl(SDKConfig.getConfig().getFrontUrl())
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.setCustomerInfo(customerInfoStr)
+					.createMap();
+			UnionPayApi.frontRequest(getResponse(), reqData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		renderNull();
+	}
+	
+	/**
+	 * 无跳转支付银联测开通并消费
+	 */
+	public void openAndConsume(){
+		try {
+			//卡号
+			String accNoEnc = AcpService.encryptData("6216261000000000018", DemoBase.encoding);
+
+			
+			Map<String, String> reqData = UnionPayApiConfig.builder()
+					.setTxnType("01")
+					.setTxnSubType("01")
+					.setBizType("000301")
+					.setChannelType("07") //渠道类型，07-PC，08-手机
+					.setMerId("777290058151764")
+					.setAccessType("0")
+					.setAccType("01")
+					.setTxnAmt("6363")
+					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
+					.setAccNo(accNoEnc)
+					.setEncryptCertId(AcpService.getEncryptCertId())//加密证书的certId，配置在acp_sdk.properties文件 acpsdk.encryptCert.path属性下
+					.setBackUrl(SDKConfig.getConfig().getBackUrl())
+					.setFrontUrl(SDKConfig.getConfig().getFrontUrl())
+					.createMap();
+			UnionPayApi.frontRequest(getResponse(), reqData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		renderNull();
 	}
 
 	
