@@ -5,6 +5,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
+import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
 import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.domain.AlipayTradeCancelModel;
@@ -17,6 +18,7 @@ import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.domain.AlipayTradeRefundModel;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.response.AlipayFundAuthOrderFreezeResponse;
 import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -130,6 +132,16 @@ public class AliPayController extends AliPayApiController {
 			model.setTotalAmount(totalAmount);
 			model.setSubject("Javen PC支付测试");
 			model.setBody("Javen IJPay PC支付测试");
+			//花呗分期相关的设置
+			/**
+			 * 测试环境不支持花呗分期的测试
+			 * hb_fq_num代表花呗分期数，仅支持传入3、6、12，其他期数暂不支持，传入会报错；
+			 * hb_fq_seller_percent代表卖家承担收费比例，商家承担手续费传入100，用户承担手续费传入0，仅支持传入100、0两种，其他比例暂不支持，传入会报错。
+			 */
+//			ExtendParams extendParams = new ExtendParams();
+//			extendParams.setHbFqNum("3");
+//			extendParams.setHbFqSellerPercent("0");
+//			model.setExtendParams(extendParams);
 			
 			AliPayApi.tradePage(getResponse(),model , notifyUrl, returnUrl);
 			renderNull();
@@ -240,6 +252,29 @@ public class AliPayController extends AliPayApiController {
 			e.printStackTrace();
 		}
 		renderJson(isSuccess);
+	}
+	
+	/**
+	 * 资金授权冻结接口
+	 */
+	public void authOrderFreeze(){
+		try {
+			String authCode = getPara("auth_code");
+			AlipayFundAuthOrderFreezeModel model = new AlipayFundAuthOrderFreezeModel();
+			model.setOutOrderNo(StringUtils.getOutTradeNo());
+			model.setOutRequestNo(StringUtils.getOutTradeNo());
+			model.setAuthCode(authCode);
+			model.setAuthCodeType("bar_code");
+			model.setOrderTitle("资金授权冻结-By IJPay");
+			model.setAmount("36");
+//			model.setPayTimeout("");
+			model.setProductCode("PRE_AUTH");
+			
+			AlipayFundAuthOrderFreezeResponse response = AliPayApi.authOrderFreezeToResponse(model);
+			renderJson(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

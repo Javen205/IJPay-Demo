@@ -93,9 +93,9 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
-			<version>java20170411150054</version>
+			<version>java20171012102412</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/alipay-sdk-java20170725114550.jar</systemPath>
+			<systemPath>${project.basedir}/libs/alipay-sdk-java20171012102412.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.unionpay</groupId>
@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.6.1</version>
+			<version>0.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.base64</groupId>
