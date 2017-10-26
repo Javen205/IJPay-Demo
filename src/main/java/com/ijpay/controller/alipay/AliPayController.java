@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
+import com.alipay.api.domain.AlipayFundCouponOrderAgreementPayModel;
 import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.domain.AlipayTradeCancelModel;
@@ -19,6 +20,7 @@ import com.alipay.api.domain.AlipayTradeRefundModel;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.response.AlipayFundAuthOrderFreezeResponse;
+import com.alipay.api.response.AlipayFundCouponOrderAgreementPayResponse;
 import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -274,6 +276,28 @@ public class AliPayController extends AliPayApiController {
 			renderJson(response);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 红包协议支付接口
+	 * https://docs.open.alipay.com/301/106168/
+	 */
+	public void agreementPay(){
+		try {
+			AlipayFundCouponOrderAgreementPayModel model = new AlipayFundCouponOrderAgreementPayModel();
+			model.setOutOrderNo(StringUtils.getOutTradeNo());
+			model.setOutRequestNo(StringUtils.getOutTradeNo());
+			model.setOrderTitle("红包协议支付接口-By IJPay");
+			model.setAmount("36");
+			model.setPayerUserId("2088102180432465");
+			
+			
+			AlipayFundCouponOrderAgreementPayResponse response = AliPayApi.fundCouponOrderAgreementPayToResponse(model);
+			renderJson(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderText("有异常哦!!!");
 		}
 	}
 
