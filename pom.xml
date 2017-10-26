@@ -90,14 +90,23 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
-			<version>java20170725114550</version>
+			<version>java20171012102412</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/alipay-sdk-java20170725114550.jar</systemPath>
+			<systemPath>${project.basedir}/libs/alipay-sdk-java20171012102412.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.unionpay</groupId>
+			<artifactId>unionpay-sdk-java</artifactId>
+			<version>1.54</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/bcprov-jdk15on-1.54.jar</systemPath>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.4</version>
+			<version>0.7-SNAPSHOT</version>
 		</dependency>
 		<!-- 开源多维码生成工具 -->
 		<dependency>

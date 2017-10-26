@@ -2,6 +2,10 @@ package com;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import com.ijpay.config.StartupRunner;
+import com.ijpay.config.TaskRunner;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -13,4 +17,14 @@ public class DemoApplication {
 //		springApplication.setAddCommandLineProperties(false);
 //		springApplication.run(args);
 	}
+	
+	 @Bean
+     public StartupRunner startupRunner(){
+         return new StartupRunner();
+     }
+
+     @Bean
+     public TaskRunner taskRunner(){
+         return new TaskRunner();
+     }
 }
