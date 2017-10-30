@@ -514,6 +514,62 @@ log.info("最新返回apk的参数:"+jsonStr);
 		renderJson(jsonStr);
 	}
 	
+	
+	/**
+	 * 微信小程序支付
+	 */
+	public void aappPay(){
+		
+		String ip = IpKit.getRealIp(getRequest());
+		if (StrKit.isBlank(ip)) {
+			ip = "127.0.0.1";
+		}
+		
+		Map<String, String> params = WxPayApiConfigKit.getWxPayApiConfig()
+				.setAttach("IJPay 测试  -By Javen")
+				.setBody("IJPay 小程序支付测试  -By Javen")
+				.setSpbillCreateIp(ip)
+				.setTotalFee("100")
+				.setTradeType(WxPayApi.TradeType.JSAPI)
+				.setNotifyUrl(notify_url)
+				.setOutTradeNo(String.valueOf(System.currentTimeMillis()))
+				.build();
+				
+		String xmlResult =  WxPayApi.pushOrder(false,params);
+		
+log.info(xmlResult);
+		Map<String, String> result = PaymentKit.xmlToMap(xmlResult);
+		
+		String return_code = result.get("return_code");
+		String return_msg = result.get("return_msg");
+		if (!PaymentKit.codeIsOK(return_code)) {
+			ajax.addError(return_msg);
+			renderJson(ajax);
+			return;
+		}
+		String result_code = result.get("result_code");
+		if (!PaymentKit.codeIsOK(result_code)) {
+			ajax.addError(return_msg);
+			renderJson(ajax);
+			return;
+		}
+		// 以下字段在return_code 和result_code都为SUCCESS的时候有返回
+		String prepay_id = result.get("prepay_id");
+		//封装调起微信支付的参数https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=5
+		Map<String, String> packageParams = new HashMap<String, String>();
+		packageParams.put("appId", WxPayApiConfigKit.getWxPayApiConfig().getAppId());
+		packageParams.put("timeStamp", System.currentTimeMillis() / 1000 + "");
+		packageParams.put("nonceStr", System.currentTimeMillis() + "");
+		packageParams.put("package", "prepay_id="+prepay_id);
+		packageParams.put("signType", "MD5");
+		String packageSign = PaymentKit.createSign(packageParams, WxPayApiConfigKit.getWxPayApiConfig().getPaternerKey());
+		packageParams.put("sign", packageSign);
+		
+		String jsonStr = JsonKit.toJson(packageParams);
+log.info("最新返回小程序支付的参数:"+jsonStr);
+		renderJson(jsonStr);
+	}
+	
 	public void pay_notify() {
 		//获取所有的参数
 		StringBuffer sbf=new StringBuffer();
