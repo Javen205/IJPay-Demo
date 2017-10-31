@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.7-SNAPSHOT</version>
+			<version>0.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.base64</groupId>
