@@ -77,7 +77,7 @@ public class AliPayController extends AliPayApiController {
 			model.setTotalAmount("0.01");
 			model.setPassbackParams("callback params");
 			model.setProductCode("QUICK_MSECURITY_PAY");
-			String orderInfo = AliPayApi.startAppPayStr(model, notify_domain + "/alipay/app_pay_notify");
+			String orderInfo = AliPayApi.startAppPay(model, notify_domain + "/alipay/app_pay_notify");
 			result.success(orderInfo);
 			renderJson(result);
 
@@ -363,7 +363,7 @@ public class AliPayController extends AliPayApiController {
 		model.setOutTradeNo(out_trade_no);
 
 		try {
-			String resultStr = AliPayApi.tradeQuery(model).getBody();
+			String resultStr = AliPayApi.tradeQueryToResponse(model).getBody();
 			renderText(resultStr);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -386,7 +386,7 @@ public class AliPayController extends AliPayApiController {
 		model.setBuyerLogonId("abpkvd0206@sandbox.com");//买家支付宝账号，和buyer_id不能同时为空
 		try {
 			
-			AlipayTradeCreateResponse response = AliPayApi.tradeCreate(model,notifyUrl);
+			AlipayTradeCreateResponse response = AliPayApi.tradeCreateToResponse(model,notifyUrl);
 			renderJson(response.getBody());
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -422,7 +422,7 @@ public class AliPayController extends AliPayApiController {
 			
 			model.setTradeNo(tradeNo);
 			
-			String resultStr = AliPayApi.tradeClose(model).getBody();
+			String resultStr = AliPayApi.tradeCloseToResponse(model).getBody();
 			renderText(resultStr);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -439,7 +439,7 @@ public class AliPayController extends AliPayApiController {
 			model.setOutRequestNo(StringUtils.getOutTradeNo());
 			model.setTradeNo(tradeNo);
 			
-			String resultStr = AliPayApi.tradeOrderSettle(model ).getBody();
+			String resultStr = AliPayApi.tradeOrderSettleToResponse(model ).getBody();
 			renderText(resultStr);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
