@@ -51,6 +51,7 @@ public class AliPayController extends AliPayApiController {
 	public String index() {
 		return "欢迎使用IJPay 中的支付宝支付 -By Javen";
 	}
+	
 	@RequestMapping("/test")
 	@ResponseBody
 	public String test(){
@@ -75,7 +76,7 @@ public class AliPayController extends AliPayApiController {
 			model.setTotalAmount("0.01");
 			model.setPassbackParams("callback params");
 			model.setProductCode("QUICK_MSECURITY_PAY");
-			String orderInfo = AliPayApi.startAppPayStr(model, aliPayBean.getDomain() + "/alipay/notify_url");
+			String orderInfo = AliPayApi.startAppPay(model, aliPayBean.getDomain() + "/alipay/notify_url");
 			result.success(orderInfo);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -310,7 +311,7 @@ public class AliPayController extends AliPayApiController {
 		model.setOutTradeNo(out_trade_no);
 
 		try {
-			return AliPayApi.tradeQuery(model).getBody();
+			return AliPayApi.tradeQueryToResponse(model).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
@@ -335,8 +336,7 @@ public class AliPayController extends AliPayApiController {
 		model.setSubject("Javen 测试统一收单交易创建接口");
 		model.setBuyerLogonId("abpkvd0206@sandbox.com");//买家支付宝账号，和buyer_id不能同时为空
 		try {
-
-			AlipayTradeCreateResponse response = AliPayApi.tradeCreate(model,notifyUrl);
+			AlipayTradeCreateResponse response = AliPayApi.tradeCreateToResponse(model, notifyUrl);
 			return response.getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -375,7 +375,7 @@ public class AliPayController extends AliPayApiController {
 
 			model.setTradeNo(tradeNo);
 
-			return AliPayApi.tradeClose(model).getBody();
+			return AliPayApi.tradeCloseToResponse(model).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
@@ -393,7 +393,7 @@ public class AliPayController extends AliPayApiController {
 			model.setOutRequestNo(StringUtils.getOutTradeNo());
 			model.setTradeNo(tradeNo);
 
-			return AliPayApi.tradeOrderSettle(model ).getBody();
+			return AliPayApi.tradeOrderSettleToResponse(model ).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}

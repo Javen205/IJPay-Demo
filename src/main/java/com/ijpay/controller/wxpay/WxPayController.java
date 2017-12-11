@@ -64,6 +64,12 @@ public class WxPayController extends WxPayApiController {
 		return ("欢迎使用IJPay 商户模式下微信支付  - by Javen");
 	}
 	
+	@RequestMapping("/test")
+	@ResponseBody
+	public String test(){
+		return wxPayBean.toString();
+	}
+	
 	@RequestMapping("/getKey")
 	@ResponseBody
 	public String getKey(){

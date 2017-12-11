@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @PropertySource("classpath:/production/alipay.properties")
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "alipay")
 public class AliPayBean {
     private String appId;
     private String privateKey;
@@ -57,13 +57,10 @@ public class AliPayBean {
 	}
 
 	@Override
-    public String toString() {
-        return "AliPayBean{" +
-                "appId='" + appId + '\'' +
-                ", privateKey='" + privateKey + '\'' +
-                ", publicKey='" + publicKey + '\'' +
-                ", serverUrl='" + serverUrl + '\'' +
-                ", domain='" + domain + '\'' +
-                '}';
-    }
+	public String toString() {
+		return "AliPayBean [appId=" + appId + ", privateKey=" + privateKey + ", publicKey=" + publicKey + ", serverUrl="
+				+ serverUrl + ", domain=" + domain + "]";
+	}
+
+	
 }

@@ -14,9 +14,9 @@ Demo:
 
 [https://gitee.com/Javen205/IJPay-Demo](https://gitee.com/Javen205/IJPay-Demo)
 
-- [JPay](https://gitee.com/Javen205/JPay) 简易而不简单的Android 支付SDK，JPay是对微信App支付、支付宝App支付的二次封装,对外提供一个相对简单的接口以及支付结果的回调
+- [JPay](https://gitee.com/Javen205/JPay) 简易而不简单的Android 支付SDK，JPay是对微信App支付、支付宝App支付、银联支付App支付的二次封装,对外提供一个相对简单的接口以及支付结果的回调
 
-- IJPay 让支付触手可及，封装了微信支付、支付宝支付常用的支付方式以及各种常用的接口
+- IJPay 让支付触手可及，封装了微信支付、支付宝支付、银联支付常用的支付方式以及各种常用的接口
 
 
 ### 效果图
