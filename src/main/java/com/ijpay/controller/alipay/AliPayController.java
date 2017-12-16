@@ -1,5 +1,6 @@
 package com.ijpay.controller.alipay;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
@@ -8,6 +9,8 @@ import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
 import com.alipay.api.domain.AlipayFundCouponOrderAgreementPayModel;
 import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
+import com.alipay.api.domain.AlipayOpenAuthTokenAppModel;
+import com.alipay.api.domain.AlipayOpenAuthTokenAppQueryModel;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.domain.AlipayTradeCancelModel;
 import com.alipay.api.domain.AlipayTradeCloseModel;
@@ -115,6 +118,7 @@ public class AliPayController extends AliPayApiController {
 		}
 		renderNull();
 	}
+
 	
 	/**
 	 * PC支付
@@ -441,6 +445,52 @@ public class AliPayController extends AliPayApiController {
 			
 			String resultStr = AliPayApi.tradeOrderSettleToResponse(model ).getBody();
 			renderText(resultStr);
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 获取应用授权URL并授权
+	 */
+	public void toOauth() {
+		try {
+			String redirectUri = notify_domain+ "/alipay/redirect_uri";
+			System.out.println(app_id);
+			String oauth2Url = AliPayApi.getOauth2Url(app_id, redirectUri);
+			redirect(oauth2Url);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 应用授权回调
+	 */
+	public void redirect_uri() {
+		try {
+			String app_id = getPara("app_id");
+			String app_auth_code = getPara("app_auth_code");
+			System.out.println("app_id:"+app_id);
+			System.out.println("app_auth_code:"+app_auth_code);
+			//使用app_auth_code换取app_auth_token
+			AlipayOpenAuthTokenAppModel model = new AlipayOpenAuthTokenAppModel();
+			model.setGrantType("authorization_code");
+			model.setCode(app_auth_code);
+			String result = AliPayApi.openAuthTokenApp(model);
+			renderText(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 查询授权信息
+	 */
+	public void openAuthTokenAppQuery() {
+		try {
+			String app_auth_token = getPara("app_auth_token");
+			AlipayOpenAuthTokenAppQueryModel model = new AlipayOpenAuthTokenAppQueryModel();
+			model.setAppAuthToken(app_auth_token);
+			String result = AliPayApi.openAuthTokenAppQuery(model);
+			renderText(result);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
