@@ -12,6 +12,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<jfinal.version>3.2</jfinal.version>
 		<weixin.version>1.9</weixin.version>
+		<ijpay.version>0.9</ijpay.version>
 		<zxing.version>3.2.1</zxing.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -112,7 +113,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.9-SNAPSHOT</version>
+			<version>${ijpay.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.base64</groupId>
