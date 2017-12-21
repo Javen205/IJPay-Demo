@@ -19,6 +19,7 @@
 	</parent>
 
 	<properties>
+		<ijapy.version>0.9</ijapy.version>
 		<zxing.version>3.2.1</zxing.version>
 		<weixin-java-mp.version>2.8.0</weixin-java-mp.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,7 +92,7 @@
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
-			<version>0.8</version>
+			<version>${ijapy.version}</version>
 		</dependency>
 		<!-- 开源多维码生成工具 -->
 		<dependency>
