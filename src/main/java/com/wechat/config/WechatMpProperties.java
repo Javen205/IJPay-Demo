@@ -4,8 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
-
-@PropertySource("classpath:/dev/wechat.properties")
+import org.springframework.stereotype.Component;
+@Component
+@PropertySource("classpath:/production/wechat.properties")
 @ConfigurationProperties(prefix = "wechat.mp")
 public class WechatMpProperties {
     /**	

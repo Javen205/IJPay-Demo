@@ -34,6 +34,7 @@ import com.jpay.weixin.api.WxPayApi.TradeType;
 import com.jpay.weixin.api.WxPayApiConfig;
 import com.jpay.weixin.api.WxPayApiConfig.PayModel;
 import com.jpay.weixin.api.WxPayApiConfigKit;
+import com.wechat.config.WechatMpProperties;
 
 @Controller
 @RequestMapping("/wxpay")
@@ -43,6 +44,9 @@ public class WxPayController extends WxPayApiController {
 
 	@Autowired
 	WxPayBean wxPayBean;
+	
+	@Autowired
+	WechatMpProperties wechatMpProperties;
 	
 	String notify_url;
 
@@ -68,6 +72,12 @@ public class WxPayController extends WxPayApiController {
 	@ResponseBody
 	public String test(){
 		return wxPayBean.toString();
+	}
+	
+	@RequestMapping("/testWeChat")
+	@ResponseBody
+	public String testWeChat(){
+		return wechatMpProperties.toString();
 	}
 	
 	@RequestMapping("/getKey")
