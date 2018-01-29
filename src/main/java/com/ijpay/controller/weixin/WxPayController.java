@@ -501,7 +501,7 @@ log.info(xmlResult);
 		//封装调起微信支付的参数 https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
 		Map<String, String> packageParams = new HashMap<String, String>();
 		packageParams.put("appid", WxPayApiConfigKit.getWxPayApiConfig().getAppId());
-		packageParams.put("mch_id", WxPayApiConfigKit.getWxPayApiConfig().getMchId());
+		packageParams.put("partnerId", WxPayApiConfigKit.getWxPayApiConfig().getMchId());
 		packageParams.put("prepayid", prepay_id);
 		packageParams.put("package", "Sign=WXPay");
 		packageParams.put("noncestr", System.currentTimeMillis() + "");
