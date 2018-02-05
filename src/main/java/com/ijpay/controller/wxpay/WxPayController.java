@@ -556,7 +556,7 @@ log.info(xmlResult);
 
 		Map<String, String> packageParams = new HashMap<String, String>();
 		packageParams.put("appid", WxPayApiConfigKit.getWxPayApiConfig().getAppId());
-		packageParams.put("mch_id", WxPayApiConfigKit.getWxPayApiConfig().getMchId());
+		packageParams.put("partnerid", WxPayApiConfigKit.getWxPayApiConfig().getMchId());
 		packageParams.put("prepayid", prepay_id);
 		packageParams.put("package", "Sign=WXPay");
 		packageParams.put("noncestr", System.currentTimeMillis() + "");
