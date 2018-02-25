@@ -19,6 +19,7 @@ import com.jfinal.log.Log;
 import com.jpay.ext.kit.IpKit;
 import com.jpay.ext.kit.PaymentKit;
 import com.jpay.ext.kit.ZxingKit;
+import com.jpay.secure.RSAUtils;
 import com.jpay.vo.AjaxResult;
 import com.jpay.weixin.api.WxPayApi;
 import com.jpay.weixin.api.WxPayApi.TradeType;
@@ -38,6 +39,7 @@ public class WxPayController extends WxPayApiController {
 	String appid = prop.get("appId");
 	String mch_id = prop.get("mchId");
 	String partnerKey = prop.get("partnerKey");
+	String certPath = prop.get("certPath");
 	String notify_url = prop.get("domain")+"/wxpay/pay_notify";
 	
 	public WxPayApiConfig getApiConfig() {
@@ -563,12 +565,156 @@ log.info(xmlResult);
 		packageParams.put("package", "prepay_id="+prepay_id);
 		packageParams.put("signType", "MD5");
 		String packageSign = PaymentKit.createSign(packageParams, WxPayApiConfigKit.getWxPayApiConfig().getPaternerKey());
-		packageParams.put("sign", packageSign);
+		packageParams.put("paySign", packageSign);
 		
 		String jsonStr = JsonKit.toJson(packageParams);
 log.info("最新返回小程序支付的参数:"+jsonStr);
 		renderJson(jsonStr);
 	}
+	/**
+	 * 企业付款到零钱
+	 */
+	public void transfers() {
+		String openId = getSessionAttr("openId");
+		openId = "oRMVFv8zhSH--EhJiu3z9G3kNX-o";
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("mch_appid", appid);
+		params.put("mchid", mch_id);
+		String nonceStr = String.valueOf(System.currentTimeMillis());
+		params.put("nonce_str", nonceStr);
+		String partnerTradeNo = String.valueOf(System.currentTimeMillis());
+		params.put("partner_trade_no", partnerTradeNo);
+		params.put("openid", openId);
+		params.put("check_name", "NO_CHECK");
+		params.put("amount", "100");
+		params.put("desc", "IJPay提现测试-By Javen");
+		String ip = IpKit.getRealIp(getRequest());
+		if (StrKit.isBlank(ip)) {
+			ip = "127.0.0.1";
+		}
+		params.put("spbill_create_ip", ip);
+
+		params.put("sign", PaymentKit.createSign(params, partnerKey));
+System.out.println("certPath>"+certPath);
+		// 提现
+		String transfers = WxPayApi.transfers(params, certPath, mch_id);
+		
+		log.info("提现结果:" + transfers);
+		System.out.println("提现结果:" + transfers);
+		
+		Map<String, String> map = PaymentKit.xmlToMap(transfers);
+		String return_code = map.get("return_code");
+		String result_code = null;
+		if (("SUCCESS").equals(return_code)) {
+			result_code = map.get("result_code");
+			if (("SUCCESS").equals(result_code)) {
+				//提现成功
+			} else {
+				//提现失败
+			}
+		}
+		renderText(transfers);
+	}
+	/**
+	 * 获取RSA加密公钥
+	 * 接口默认输出PKCS#1格式的公钥，商户需根据自己开发的语言选择公钥格式
+	 * Java RSA加密需要使用PKCS#8 不然会出现异常algid parse error, not a sequence​
+	 * PKCS#1 转 PKCS#8:
+	 * openssl rsa -RSAPublicKey_in -in <filename> -pubout
+	 */
+	public void getPublicKey(){
+		try {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", mch_id);
+			params.put("nonce_str", String.valueOf(System.currentTimeMillis()));
+			params.put("sign_type", "MD5");
+			String createSign = PaymentKit.createSign(params, partnerKey);
+			params.put("sign", createSign);
+			String publicKeyStr = WxPayApi.getPublicKey(params , certPath, mch_id);
+			renderText(publicKeyStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderText(e.getMessage());
+		}
+	}
+	/**
+	 * 企业付款到银行卡
+	 */
+	public void payBank() {
+		try {
+			//假设获取到的RSA加密公钥为PUBLIC_KEY(PKCS#8格式)
+			final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6Bl76IwSvBTiibZ+CNRUA6BfahMshZ0WJpHD1GpmvcQjeN6Yrv6c9eIl6gB4nU3isN7bn+LmoVTpH1gHViaV2YyG/zXj4z4h7r+V+ezesMqqorEg38BCNUHNmhnw4/C0I4gBAQ4x0SJOGnfKGZKR9yzvbkJtvEn732JcEZCbdTZmaxkwlenXvM+mStcJaxBCB/h5xJ5VOF5nDbTPzLphIpzddr3zx/Jxjna9QB1v/YSKYXn+iuwruNUXGCvvxBWaBGKrjOdRTRy9adWOgNmtuYDQJ2YOfG8PtPe06ELKjmr2CfaAGrKKUroyaGvy3qxAV0PlT+UQ4ADSXWt/zl0o5wIDAQAB";	
+			
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", mch_id);
+			params.put("partner_trade_no", System.currentTimeMillis()+"");
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("enc_bank_no", RSAUtils.encryptByPublicKeyByWx("6214837805417833", PUBLIC_KEY));//收款方银行卡号
+			params.put("enc_true_name", RSAUtils.encryptByPublicKeyByWx("周业文", PUBLIC_KEY));//收款方用户名	
+			params.put("bank_code", "1001");//收款方开户行		
+			params.put("amount", "1");
+			params.put("desc", "IJPay 测试付款到银行卡-By Javen");
+			params.put("sign", PaymentKit.createSign(params, partnerKey));
+			String payBank = WxPayApi.payBank(params , certPath, mch_id);
+			renderText(payBank);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderText(e.getMessage());
+		}
+	}
+	
+	/**
+	 * 微信退款
+	 */
+	public void refund() {
+		String transaction_id = getPara("transactionId");
+		String out_trade_no = getPara("out_trade_no");
+		
+		if (StrKit.isBlank(out_trade_no) && StrKit.isBlank(transaction_id)) {
+			renderText("transactionId、out_trade_no二选一");
+			return;
+		}
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("appid", appid);
+		params.put("mch_id", mch_id);
+		params.put("nonce_str", System.currentTimeMillis()+"");
+		if (StrKit.notBlank(transaction_id)) {
+			params.put("transaction_id", transaction_id);
+		}else {
+			params.put("out_trade_no", out_trade_no);
+		}
+		params.put("out_refund_no", System.currentTimeMillis()+"");
+		params.put("total_fee", "1");
+		params.put("refund_fee", "1");
+		params.put("sign", PaymentKit.createSign(params, partnerKey));
+		String refund = WxPayApi.orderRefund(false, params , certPath, mch_id);
+		renderText(refund);
+	}
+	
+	/**
+	 * 微信退款查询
+	 */
+	public void refundQuery() {
+		String transaction_id = getPara("transactionId");
+		String out_trade_no = getPara("out_trade_no");
+		String out_refund_no = getPara("out_refund_no");
+		String refund_id = getPara("refund_id");
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("appid", appid);
+		params.put("mch_id", mch_id);
+		params.put("nonce_str", System.currentTimeMillis()+"");
+		params.put("transaction_id", transaction_id);
+		params.put("out_trade_no", out_trade_no);
+		params.put("out_refund_no", out_refund_no);
+		params.put("refund_id", refund_id);
+		params.put("out_refund_no", System.currentTimeMillis()+"");
+		params.put("sign", PaymentKit.createSign(params, partnerKey));
+		String refund = WxPayApi.orderRefundQuery(false, params);
+		renderText(refund);
+	}
+	
 	
 	public void pay_notify() {
 		//获取所有的参数
