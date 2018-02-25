@@ -616,6 +616,28 @@ System.out.println("certPath>"+certPath);
 		renderText(transfers);
 	}
 	/**
+	 * 查询企业付款到零钱
+	 */
+	public void transferInfo() {
+		try {
+			String partner_trade_no = getPara("partner_trade_no");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("partner_trade_no", partner_trade_no);
+			params.put("mch_id", mch_id);
+			params.put("appid", appid);
+			params.put("sign", PaymentKit.createSign(params, partnerKey));
+			
+			String transferInfo = WxPayApi.getTransferInfo(params , certPath, mch_id);
+			renderText(transferInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderText(e.getMessage());
+		}
+	}
+	
+	
+	/**
 	 * 获取RSA加密公钥
 	 * 接口默认输出PKCS#1格式的公钥，商户需根据自己开发的语言选择公钥格式
 	 * Java RSA加密需要使用PKCS#8 不然会出现异常algid parse error, not a sequence​
@@ -661,6 +683,25 @@ System.out.println("certPath>"+certPath);
 			e.printStackTrace();
 			renderText(e.getMessage());
 		}
+	}
+	/**
+	 * 查询企业付款到银行
+	 */
+	public void queryBank() {
+		try {
+			String partner_trade_no = getPara("partner_trade_no");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", mch_id);
+			params.put("partner_trade_no", partner_trade_no);
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("sign", PaymentKit.createSign(params, partnerKey));
+			String queryBank = WxPayApi.queryBank(params, certPath, mch_id);
+			renderText(queryBank);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderText(e.getMessage());
+		}
+		
 	}
 	
 	/**
