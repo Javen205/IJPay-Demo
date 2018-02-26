@@ -664,15 +664,16 @@ System.out.println("certPath>"+certPath);
 	 */
 	public void payBank() {
 		try {
-			//假设获取到的RSA加密公钥为PUBLIC_KEY(PKCS#8格式)
+			//通过WxPayApi.getPublicKey接口获取RSA加密公钥
+			//假设获取到的RSA加密公钥为PUBLIC_KEY(PKCS#8格式)  
 			final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6Bl76IwSvBTiibZ+CNRUA6BfahMshZ0WJpHD1GpmvcQjeN6Yrv6c9eIl6gB4nU3isN7bn+LmoVTpH1gHViaV2YyG/zXj4z4h7r+V+ezesMqqorEg38BCNUHNmhnw4/C0I4gBAQ4x0SJOGnfKGZKR9yzvbkJtvEn732JcEZCbdTZmaxkwlenXvM+mStcJaxBCB/h5xJ5VOF5nDbTPzLphIpzddr3zx/Jxjna9QB1v/YSKYXn+iuwruNUXGCvvxBWaBGKrjOdRTRy9adWOgNmtuYDQJ2YOfG8PtPe06ELKjmr2CfaAGrKKUroyaGvy3qxAV0PlT+UQ4ADSXWt/zl0o5wIDAQAB";	
 			
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("mch_id", mch_id);
 			params.put("partner_trade_no", System.currentTimeMillis()+"");
 			params.put("nonce_str", System.currentTimeMillis()+"");
-			params.put("enc_bank_no", RSAUtils.encryptByPublicKeyByWx("6214837805417833", PUBLIC_KEY));//收款方银行卡号
-			params.put("enc_true_name", RSAUtils.encryptByPublicKeyByWx("周业文", PUBLIC_KEY));//收款方用户名	
+			params.put("enc_bank_no", RSAUtils.encryptByPublicKeyByWx("银行卡号", PUBLIC_KEY));//收款方银行卡号
+			params.put("enc_true_name", RSAUtils.encryptByPublicKeyByWx("银行卡持有人姓名", PUBLIC_KEY));//收款方用户名	
 			params.put("bank_code", "1001");//收款方开户行		
 			params.put("amount", "1");
 			params.put("desc", "IJPay 测试付款到银行卡-By Javen");
