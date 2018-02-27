@@ -7,13 +7,9 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<!-- log4j日志文件管理包版本 -->
-		<slf4j.version>1.7.7</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
 		<jfinal.version>3.2</jfinal.version>
 		<weixin.version>1.9</weixin.version>
-		<ijpay.version>1.1.2</ijpay.version>
-		<zxing.version>3.2.1</zxing.version>
+		<ijpay.version>1.1.3-SNAPSHOT</ijpay.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -43,55 +39,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.31</version>
-		</dependency>
-
-		<!-- 开源多维码生成工具 -->
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-			<version>${zxing.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>${zxing.version}</version>
-		</dependency>
-		<!-- okhttp2 -->
-		<dependency>
-			<groupId>com.squareup.okhttp</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>2.7.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>3.9.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okio</groupId>
-			<artifactId>okio</artifactId>
-			<version>1.14.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
-		</dependency>
-		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>java20171012102412</version>
@@ -105,29 +52,13 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/libs/bcprov-jdk15on-1.54.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>com.github.javen205</groupId>
 			<artifactId>IJPay</artifactId>
 			<version>${ijpay.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.base64</groupId>
-			<artifactId>javabase64</artifactId>
-			<version>1.3.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/javabase64-1.3.1.jar</systemPath>
-		</dependency>
-		<!-- DES 加解密会使用到 -->
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.10</version>
-		</dependency>
+		
 	</dependencies>
 
 
