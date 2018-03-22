@@ -1,10 +1,13 @@
 package com.ijpay.controller.alipay;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.domain.AlipayCommerceCityfacilitatorVoucherGenerateModel;
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
 import com.alipay.api.domain.AlipayFundCouponOrderAgreementPayModel;
@@ -96,7 +99,7 @@ public class AliPayController extends AliPayApiController {
 	public void wapPay() {
 		String body = "我是测试数据-By Javen";
 		String subject = "Javen Wap支付测试";
-		String totalAmount = "1";
+		String totalAmount = getPara("totalAmount");
 		String passbackParams = "1";
 		String returnUrl = notify_domain + "/alipay/return_url";
 		String notifyUrl = notify_domain + "/alipay/notify_url";
@@ -380,7 +383,7 @@ public class AliPayController extends AliPayApiController {
 	public void tradeCreate(){
 		String outTradeNo = getPara("out_trade_no");
 		
-		String notifyUrl = notify_domain+ "/alipay/notify_url";;
+		String notifyUrl = notify_domain+ "/alipay/notify_url";
 		
 		AlipayTradeCreateModel model = new AlipayTradeCreateModel();
 		model.setOutTradeNo(outTradeNo);
@@ -494,6 +497,55 @@ public class AliPayController extends AliPayApiController {
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * 批量付款到支付宝账户有密接口
+	 */
+	public  void batchTrans() {
+		try {
+			String sign_type = "MD5";
+			String notifyUrl = notify_domain+ "/alipay/notify_url";;
+			Map<String, String> params = new HashMap<>();
+			params.put("partner", "PID");
+			params.put("sign_type", sign_type);
+			params.put("notify_url", notifyUrl);
+			params.put("account_name", "xxx");
+			params.put("detail_data", "流水号1^收款方账号1^收款账号姓名1^付款金额1^备注说明1|流水号2^收款方账号2^收款账号姓名2^付款金额2^备注说明2");
+			params.put("batch_no",String.valueOf(System.currentTimeMillis()));
+			params.put("batch_num", 1+"");
+			params.put("batch_fee", 10.00+"");
+			params.put("email", "xx@xxx.com");
+			
+			AliPayApi.batchTrans(params, private_key, sign_type, getResponse());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		renderNull();
+	}
+	/**
+	 * 地铁购票核销码发码
+	 */
+	public void voucherGenerate() {
+		try {
+			//需要支付成功的订单号
+			String tradeNo = getPara("tradeNo");
+			
+			AlipayCommerceCityfacilitatorVoucherGenerateModel model = new AlipayCommerceCityfacilitatorVoucherGenerateModel();
+			model.setCityCode("440300");
+			model.setTradeNo(tradeNo);
+			model.setTotalFee("8");
+			model.setTicketNum("2");
+			model.setTicketType("oneway");
+			model.setSiteBegin("001");
+			model.setSiteEnd("002");
+			model.setTicketPrice("4");
+			String result = AliPayApi.voucherGenerate(model);
+			renderText(result);
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+			renderText(e.getMessage());
+		}
+		
 	}
 	
 	public void return_url() {
