@@ -19,7 +19,7 @@
 	</parent>
 
 	<properties>
-		<ijapy.version>0.9</ijapy.version>
+		<ijapy.version>1.1.4</ijapy.version>
 		<zxing.version>3.2.1</zxing.version>
 		<weixin-java-mp.version>2.8.0</weixin-java-mp.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,26 +61,47 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.37</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.javen205</groupId>
+			<artifactId>IJPay</artifactId>
+			<version>${ijapy.version}</version>
+		</dependency>
 
+		<!-- 开源多维码生成工具 -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<!-- 开源多维码生成工具 -->
+		<!-- 支付宝必须 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>alipay-sdk-java</artifactId>
-			<version>java20171012102412</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/alipay-sdk-java20171012102412.jar</systemPath>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.6</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>3.0.52.ALL</version>
+		</dependency>
+		<!-- 支付宝必须 -->
+		<!-- 银联必须 -->
 		<dependency>
 			<groupId>com.unionpay</groupId>
 			<artifactId>unionpay-sdk-java</artifactId>
@@ -88,45 +109,32 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/libs/bcprov-jdk15on-1.54.jar</systemPath>
 		</dependency>
-		
 		<dependency>
-			<groupId>com.github.javen205</groupId>
-			<artifactId>IJPay</artifactId>
-			<version>${ijapy.version}</version>
-		</dependency>
-		<!-- 开源多维码生成工具 -->
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-			<version>${zxing.version}</version>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>${zxing.version}</version>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.25</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-		<!-- okhttp2 -->
-		<dependency>
-			<groupId>com.squareup.okhttp</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>2.7.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>3.8.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okio</groupId>
-			<artifactId>okio</artifactId>
-			<version>1.11.0</version>
-		</dependency>
+		<!-- 银联必须 -->
 		
 		<dependency>
 			<groupId>com.github.binarywang</groupId>

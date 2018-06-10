@@ -28,6 +28,7 @@ import com.jpay.ext.kit.IpKit;
 import com.jpay.ext.kit.PaymentKit;
 import com.jpay.ext.kit.StrKit;
 import com.jpay.ext.kit.ZxingKit;
+import com.jpay.secure.RSAUtils;
 import com.jpay.vo.AjaxResult;
 import com.jpay.weixin.api.WxPayApi;
 import com.jpay.weixin.api.WxPayApi.TradeType;
@@ -568,6 +569,251 @@ log.info(xmlResult);
 log.info("最新返回apk的参数:"+jsonStr);
 		result.success(jsonStr);
 		return result;
+	}
+	
+	/**
+	 * 微信小程序支付
+	 */
+	@RequestMapping(value = "/aappPay",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public AjaxResult aappPay(HttpServletRequest request){
+		
+		String ip = IpKit.getRealIp(request);
+		if (StrKit.isBlank(ip)) {
+			ip = "127.0.0.1";
+		}
+		
+		Map<String, String> params = WxPayApiConfigKit.getWxPayApiConfig()
+				.setAttach("IJPay 测试  -By Javen")
+				.setBody("IJPay 小程序支付测试  -By Javen")
+				.setSpbillCreateIp(ip)
+				.setTotalFee("100")
+				.setTradeType(WxPayApi.TradeType.JSAPI)
+				.setNotifyUrl(notify_url)
+				.setOutTradeNo(String.valueOf(System.currentTimeMillis()))
+				.build();
+				
+		String xmlResult =  WxPayApi.pushOrder(false,params);
+		
+log.info(xmlResult);
+		Map<String, String> resultMap = PaymentKit.xmlToMap(xmlResult);
+		
+		String return_code = resultMap.get("return_code");
+		String return_msg = resultMap.get("return_msg");
+		if (!PaymentKit.codeIsOK(return_code)) {
+			result.addError(return_msg);
+			return result;
+		}
+		String result_code = resultMap.get("result_code");
+		if (!PaymentKit.codeIsOK(result_code)) {
+			result.addError(return_msg);
+			return result;
+		}
+		// 以下字段在return_code 和result_code都为SUCCESS的时候有返回
+		String prepay_id = resultMap.get("prepay_id");
+		//封装调起微信支付的参数https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=5
+		Map<String, String> packageParams = new HashMap<String, String>();
+		packageParams.put("appId", WxPayApiConfigKit.getWxPayApiConfig().getAppId());
+		packageParams.put("timeStamp", System.currentTimeMillis() / 1000 + "");
+		packageParams.put("nonceStr", System.currentTimeMillis() + "");
+		packageParams.put("package", "prepay_id="+prepay_id);
+		packageParams.put("signType", "MD5");
+		String packageSign = PaymentKit.createSign(packageParams, WxPayApiConfigKit.getWxPayApiConfig().getPaternerKey());
+		packageParams.put("paySign", packageSign);
+		
+		String jsonStr = JSON.toJSONString(packageParams);
+log.info("最新返回小程序支付的参数:"+jsonStr);
+		result.success(jsonStr);
+		return result;
+	}
+	
+	/**
+	 * 企业付款到零钱
+	 */
+	@RequestMapping(value = "/transfers",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String transfers(HttpServletRequest request,  @RequestParam("openId") String openId) {
+//		openId = "oRMVFv8zhSH--EhJiu3z9G3kNX-o";
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("mch_appid", wxPayBean.getAppId());
+		params.put("mchid", wxPayBean.getMchId());
+		String nonceStr = String.valueOf(System.currentTimeMillis());
+		params.put("nonce_str", nonceStr);
+		String partnerTradeNo = String.valueOf(System.currentTimeMillis());
+		params.put("partner_trade_no", partnerTradeNo);
+		params.put("openid", openId);
+		params.put("check_name", "NO_CHECK");
+		params.put("amount", "100");
+		params.put("desc", "IJPay提现测试-By Javen");
+		String ip = IpKit.getRealIp(request);
+		if (StrKit.isBlank(ip)) {
+			ip = "127.0.0.1";
+		}
+		params.put("spbill_create_ip", ip);
+
+		params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+System.out.println("certPath>"+wxPayBean.getCertPath());
+		// 提现
+		String transfers = WxPayApi.transfers(params, wxPayBean.getCertPath(), wxPayBean.getMchId());
+		
+		log.info("提现结果:" + transfers);
+		System.out.println("提现结果:" + transfers);
+		
+		Map<String, String> map = PaymentKit.xmlToMap(transfers);
+		String return_code = map.get("return_code");
+		String result_code = null;
+		if (("SUCCESS").equals(return_code)) {
+			result_code = map.get("result_code");
+			if (("SUCCESS").equals(result_code)) {
+				//提现成功
+			} else {
+				//提现失败
+			}
+		}
+		return transfers;
+	}
+	/**
+	 * 查询企业付款到零钱
+	 */
+	@RequestMapping(value = "/transfers",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String transferInfo(@RequestParam("partner_trade_no") String partner_trade_no) {
+		try {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("partner_trade_no", partner_trade_no);
+			params.put("mch_id", wxPayBean.getMchId());
+			params.put("appid", wxPayBean.getAppId());
+			params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+			
+			return WxPayApi.getTransferInfo(params , wxPayBean.getCertPath(), wxPayBean.getMchId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 获取RSA加密公钥
+	 * 接口默认输出PKCS#1格式的公钥，商户需根据自己开发的语言选择公钥格式
+	 * Java RSA加密需要使用PKCS#8 不然会出现异常algid parse error, not a sequence​
+	 * PKCS#1 转 PKCS#8:
+	 * openssl rsa -RSAPublicKey_in -in <filename> -pubout
+	 */
+	@RequestMapping(value = "/getPublicKey",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String getPublicKey(){
+		try {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", wxPayBean.getMchId());
+			params.put("nonce_str", String.valueOf(System.currentTimeMillis()));
+			params.put("sign_type", "MD5");
+			String createSign = PaymentKit.createSign(params, wxPayBean.getPartnerKey());
+			params.put("sign", createSign);
+			String publicKeyStr = WxPayApi.getPublicKey(params , wxPayBean.getCertPath(), wxPayBean.getMchId());
+			return publicKeyStr;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/**
+	 * 企业付款到银行卡
+	 */
+	@RequestMapping(value = "/payBank",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String payBank() {
+		try {
+			//通过WxPayApi.getPublicKey接口获取RSA加密公钥
+			//假设获取到的RSA加密公钥为PUBLIC_KEY(PKCS#8格式)  
+			final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6Bl76IwSvBTiibZ+CNRUA6BfahMshZ0WJpHD1GpmvcQjeN6Yrv6c9eIl6gB4nU3isN7bn+LmoVTpH1gHViaV2YyG/zXj4z4h7r+V+ezesMqqorEg38BCNUHNmhnw4/C0I4gBAQ4x0SJOGnfKGZKR9yzvbkJtvEn732JcEZCbdTZmaxkwlenXvM+mStcJaxBCB/h5xJ5VOF5nDbTPzLphIpzddr3zx/Jxjna9QB1v/YSKYXn+iuwruNUXGCvvxBWaBGKrjOdRTRy9adWOgNmtuYDQJ2YOfG8PtPe06ELKjmr2CfaAGrKKUroyaGvy3qxAV0PlT+UQ4ADSXWt/zl0o5wIDAQAB";	
+			
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", wxPayBean.getMchId());
+			params.put("partner_trade_no", System.currentTimeMillis()+"");
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("enc_bank_no", RSAUtils.encryptByPublicKeyByWx("银行卡号", PUBLIC_KEY));//收款方银行卡号
+			params.put("enc_true_name", RSAUtils.encryptByPublicKeyByWx("银行卡持有人姓名", PUBLIC_KEY));//收款方用户名	
+			params.put("bank_code", "1001");//收款方开户行		
+			params.put("amount", "1");
+			params.put("desc", "IJPay 测试付款到银行卡-By Javen");
+			params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+			String payBank = WxPayApi.payBank(params , wxPayBean.getCertPath(), wxPayBean.getMchId());
+			return payBank;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/**
+	 * 查询企业付款到银行
+	 */
+	@RequestMapping(value = "/queryBank",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String queryBank(@RequestParam("partner_trade_no") String partner_trade_no) {
+		try {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("mch_id", wxPayBean.getMchId());
+			params.put("partner_trade_no", partner_trade_no);
+			params.put("nonce_str", System.currentTimeMillis()+"");
+			params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+			String queryBank = WxPayApi.queryBank(params, wxPayBean.getCertPath(), wxPayBean.getMchId());
+			return queryBank;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 微信退款
+	 */
+	@RequestMapping(value = "/pay_notify",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String refund(@RequestParam("transactionId") String transactionId,@RequestParam("out_trade_no") String out_trade_no) {
+		
+		if (StrKit.isBlank(out_trade_no) && StrKit.isBlank(transactionId)) {
+			return "transactionId、out_trade_no二选一";
+		}
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("appid", wxPayBean.getAppId());
+		params.put("mch_id", wxPayBean.getMchId());
+		params.put("nonce_str", System.currentTimeMillis()+"");
+		if (StrKit.notBlank(transactionId)) {
+			params.put("transaction_id", transactionId);
+		}else {
+			params.put("out_trade_no", out_trade_no);
+		}
+		params.put("out_refund_no", System.currentTimeMillis()+"");
+		params.put("total_fee", "1");
+		params.put("refund_fee", "1");
+		params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+		String refund = WxPayApi.orderRefund(false, params , wxPayBean.getCertPath(), wxPayBean.getMchId());
+		return refund;
+	}
+	
+	/**
+	 * 微信退款查询
+	 */
+	@RequestMapping(value = "/pay_notify",method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public String refundQuery(@RequestParam("transactionId") String transactionId,@RequestParam("out_trade_no") String out_trade_no,
+			@RequestParam("out_refund_no") String out_refund_no,@RequestParam("refund_id") String refund_id) {
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("appid", wxPayBean.getAppId());
+		params.put("mch_id", wxPayBean.getMchId());
+		params.put("nonce_str", System.currentTimeMillis()+"");
+		params.put("transaction_id", transactionId);
+		params.put("out_trade_no", out_trade_no);
+		params.put("out_refund_no", out_refund_no);
+		params.put("refund_id", refund_id);
+		params.put("out_refund_no", System.currentTimeMillis()+"");
+		params.put("sign", PaymentKit.createSign(params, wxPayBean.getPartnerKey()));
+		String refund = WxPayApi.orderRefundQuery(false, params);
+		return refund;
 	}
 	
 	@RequestMapping(value = "/pay_notify",method={RequestMethod.POST,RequestMethod.GET})

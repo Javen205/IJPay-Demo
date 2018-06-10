@@ -1,16 +1,11 @@
 package com.ijpay.controller.alipay;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.domain.*;
-import com.alipay.api.internal.util.AlipaySignature;
-import com.alipay.api.response.AlipayTradeCreateResponse;
-import com.ijpay.entity.AliPayBean;
-import com.jpay.alipay.AliPayApi;
-import com.jpay.alipay.AliPayApiConfig;
-import com.jpay.alipay.AliPayApiConfigKit;
-import com.jpay.util.StringUtils;
-import com.jpay.vo.AjaxResult;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +14,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.domain.AlipayCommerceCityfacilitatorVoucherGenerateModel;
+import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
+import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
+import com.alipay.api.domain.AlipayFundCouponOrderAgreementPayModel;
+import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
+import com.alipay.api.domain.AlipayOpenAuthTokenAppModel;
+import com.alipay.api.domain.AlipayOpenAuthTokenAppQueryModel;
+import com.alipay.api.domain.AlipayTradeAppPayModel;
+import com.alipay.api.domain.AlipayTradeCancelModel;
+import com.alipay.api.domain.AlipayTradeCloseModel;
+import com.alipay.api.domain.AlipayTradeCreateModel;
+import com.alipay.api.domain.AlipayTradeOrderSettleModel;
+import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.domain.AlipayTradePayModel;
+import com.alipay.api.domain.AlipayTradePrecreateModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.domain.AlipayTradeRefundModel;
+import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.response.AlipayFundAuthOrderFreezeResponse;
+import com.alipay.api.response.AlipayFundCouponOrderAgreementPayResponse;
+import com.alipay.api.response.AlipayTradeCreateResponse;
+import com.ijpay.entity.AliPayBean;
+import com.jpay.alipay.AliPayApi;
+import com.jpay.alipay.AliPayApiConfig;
+import com.jpay.alipay.AliPayApiConfigKit;
+import com.jpay.util.StringUtils;
+import com.jpay.vo.AjaxResult;
 
 
 @Controller
@@ -127,13 +149,24 @@ public class AliPayController extends AliPayApiController {
 			
 			String returnUrl = aliPayBean.getDomain() + "/alipay/return_url";
 			String notifyUrl = aliPayBean.getDomain() + "/alipay/notify_url";
-			AlipayTradePayModel model = new AlipayTradePayModel();
+			AlipayTradePagePayModel model = new AlipayTradePagePayModel();
 			
 			model.setOutTradeNo(outTradeNo);
 			model.setProductCode("FAST_INSTANT_TRADE_PAY");
 			model.setTotalAmount(totalAmount);
 			model.setSubject("Javen PC支付测试");
 			model.setBody("Javen IJPay PC支付测试");
+			model.setPassbackParams("passback_params");
+			//花呗分期相关的设置
+			/**
+			 * 测试环境不支持花呗分期的测试
+			 * hb_fq_num代表花呗分期数，仅支持传入3、6、12，其他期数暂不支持，传入会报错；
+			 * hb_fq_seller_percent代表卖家承担收费比例，商家承担手续费传入100，用户承担手续费传入0，仅支持传入100、0两种，其他比例暂不支持，传入会报错。
+			 */
+//			ExtendParams extendParams = new ExtendParams();
+//			extendParams.setHbFqNum("3");
+//			extendParams.setHbFqSellerPercent("0");
+//			model.setExtendParams(extendParams);
 			
 			AliPayApi.tradePage(response,model , notifyUrl, returnUrl);
 		} catch (Exception e) {
@@ -246,6 +279,56 @@ public class AliPayController extends AliPayApiController {
 			e.printStackTrace();
 		}
 		return isSuccess;
+	}
+	
+	/**
+	 * 资金授权冻结接口
+	 */
+	@RequestMapping(value = "/authOrderFreeze")
+	@ResponseBody
+	public AlipayFundAuthOrderFreezeResponse authOrderFreeze(@RequestParam("auth_code") String authCode){
+		try {
+			AlipayFundAuthOrderFreezeModel model = new AlipayFundAuthOrderFreezeModel();
+			model.setOutOrderNo(StringUtils.getOutTradeNo());
+			model.setOutRequestNo(StringUtils.getOutTradeNo());
+			model.setAuthCode(authCode);
+			model.setAuthCodeType("bar_code");
+			model.setOrderTitle("资金授权冻结-By IJPay");
+			model.setAmount("36");
+//			model.setPayTimeout("");
+			model.setProductCode("PRE_AUTH");
+			
+			AlipayFundAuthOrderFreezeResponse response = AliPayApi.authOrderFreezeToResponse(model);
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+
+	/**
+	 * 红包协议支付接口
+	 * https://docs.open.alipay.com/301/106168/
+	 */
+	@RequestMapping(value = "/agreementPay")
+	@ResponseBody
+	public AlipayFundCouponOrderAgreementPayResponse agreementPay(){
+		try {
+			AlipayFundCouponOrderAgreementPayModel model = new AlipayFundCouponOrderAgreementPayModel();
+			model.setOutOrderNo(StringUtils.getOutTradeNo());
+			model.setOutRequestNo(StringUtils.getOutTradeNo());
+			model.setOrderTitle("红包协议支付接口-By IJPay");
+			model.setAmount("36");
+			model.setPayerUserId("2088102180432465");
+			
+			
+			AlipayFundCouponOrderAgreementPayResponse response = AliPayApi.fundCouponOrderAgreementPayToResponse(model);
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -399,7 +482,109 @@ public class AliPayController extends AliPayApiController {
 		}
 		return null;
 	}
+	
+	/**
+	 * 获取应用授权URL并授权
+	 */
+	@RequestMapping(value = "/toOauth")
+	@ResponseBody
+	public void toOauth(HttpServletResponse response) {
+		try {
+			String redirectUri = aliPayBean.getDomain()+ "/alipay/redirect_uri";
+			String oauth2Url = AliPayApi.getOauth2Url(aliPayBean.getAppId(), redirectUri);
+			response.sendRedirect(oauth2Url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 应用授权回调
+	 */
+	@RequestMapping(value = "/redirect_uri")
+	@ResponseBody
+	public String redirect_uri(@RequestParam("app_id") String app_id,@RequestParam("app_auth_code") String app_auth_code) {
+		try {
+			System.out.println("app_id:"+app_id);
+			System.out.println("app_auth_code:"+app_auth_code);
+			//使用app_auth_code换取app_auth_token
+			AlipayOpenAuthTokenAppModel model = new AlipayOpenAuthTokenAppModel();
+			model.setGrantType("authorization_code");
+			model.setCode(app_auth_code);
+			return  AliPayApi.openAuthTokenApp(model);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/**
+	 * 查询授权信息
+	 */
+	@RequestMapping(value = "/openAuthTokenAppQuery")
+	@ResponseBody
+	public String openAuthTokenAppQuery(@RequestParam("app_auth_token") String app_auth_token) {
+		try {
+			AlipayOpenAuthTokenAppQueryModel model = new AlipayOpenAuthTokenAppQueryModel();
+			model.setAppAuthToken(app_auth_token);
+			return  AliPayApi.openAuthTokenAppQuery(model);
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
+	/**
+	 * 批量付款到支付宝账户有密接口
+	 */
+	@RequestMapping(value = "/batchTrans")
+	@ResponseBody
+	public  void batchTrans(HttpServletResponse response) {
+		try {
+			String sign_type = "MD5";
+			String notifyUrl = aliPayBean.getDomain()+ "/alipay/notify_url";;
+			Map<String, String> params = new HashMap<>();
+			params.put("partner", "PID");
+			params.put("sign_type", sign_type);
+			params.put("notify_url", notifyUrl);
+			params.put("account_name", "xxx");
+			params.put("detail_data", "流水号1^收款方账号1^收款账号姓名1^付款金额1^备注说明1|流水号2^收款方账号2^收款账号姓名2^付款金额2^备注说明2");
+			params.put("batch_no",String.valueOf(System.currentTimeMillis()));
+			params.put("batch_num", 1+"");
+			params.put("batch_fee", 10.00+"");
+			params.put("email", "xx@xxx.com");
+			
+			AliPayApi.batchTrans(params, aliPayBean.getPrivateKey(), sign_type, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 地铁购票核销码发码
+	 */
+	@RequestMapping(value = "/voucherGenerate")
+	@ResponseBody
+	public String voucherGenerate(@RequestParam("tradeNo") String tradeNo) {
+		try {
+			//需要支付成功的订单号
+//			String tradeNo = getPara("tradeNo");
+			
+			AlipayCommerceCityfacilitatorVoucherGenerateModel model = new AlipayCommerceCityfacilitatorVoucherGenerateModel();
+			model.setCityCode("440300");
+			model.setTradeNo(tradeNo);
+			model.setTotalFee("8");
+			model.setTicketNum("2");
+			model.setTicketType("oneway");
+			model.setSiteBegin("001");
+			model.setSiteEnd("002");
+			model.setTicketPrice("4");
+			return AliPayApi.voucherGenerate(model);
+		} catch (AlipayApiException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@RequestMapping(value = "/return_url")
 	@ResponseBody
 	public String return_url(HttpServletRequest request) {
