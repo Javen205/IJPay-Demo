@@ -7,23 +7,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
-import com.alipay.api.domain.AlipayCommerceCityfacilitatorVoucherGenerateModel;
-import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
-import com.alipay.api.domain.AlipayFundAuthOrderFreezeModel;
-import com.alipay.api.domain.AlipayFundCouponOrderAgreementPayModel;
-import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
-import com.alipay.api.domain.AlipayOpenAuthTokenAppModel;
-import com.alipay.api.domain.AlipayOpenAuthTokenAppQueryModel;
-import com.alipay.api.domain.AlipayTradeAppPayModel;
-import com.alipay.api.domain.AlipayTradeCancelModel;
-import com.alipay.api.domain.AlipayTradeCloseModel;
-import com.alipay.api.domain.AlipayTradeCreateModel;
-import com.alipay.api.domain.AlipayTradeOrderSettleModel;
-import com.alipay.api.domain.AlipayTradePayModel;
-import com.alipay.api.domain.AlipayTradePrecreateModel;
-import com.alipay.api.domain.AlipayTradeQueryModel;
-import com.alipay.api.domain.AlipayTradeRefundModel;
-import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.domain.*;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.response.AlipayFundAuthOrderFreezeResponse;
 import com.alipay.api.response.AlipayFundCouponOrderAgreementPayResponse;
@@ -134,13 +118,15 @@ public class AliPayController extends AliPayApiController {
 			
 			String returnUrl = notify_domain + "/alipay/return_url";
 			String notifyUrl = notify_domain + "/alipay/notify_url";
-			AlipayTradePayModel model = new AlipayTradePayModel();
+
+			AlipayTradePagePayModel model = new AlipayTradePagePayModel();
 			
 			model.setOutTradeNo(outTradeNo);
 			model.setProductCode("FAST_INSTANT_TRADE_PAY");
 			model.setTotalAmount(totalAmount);
 			model.setSubject("Javen PC支付测试");
 			model.setBody("Javen IJPay PC支付测试");
+			model.setPassbackParams("passback_params");
 			//花呗分期相关的设置
 			/**
 			 * 测试环境不支持花呗分期的测试

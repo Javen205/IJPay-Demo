@@ -132,14 +132,14 @@ public class APPConfig extends JFinalConfig {
 	 * 方法可以启动项目，此main方法可以放置在任意的Class类定义中，不一定要放于此
 	 */
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 8080, "/", 5);// 启动配置项
+//		JFinal.start("src/main/webapp", 8080, "/", 5);// 启动配置项
 		/**
 		 * 特别注意：
 		 * 1、IDEA 推荐使用Plugins中的jetty插件启动
 		 * 2、如果想直接运行APPConfig需要做如下配置
 		 * IDEA 下直接启动需要去掉最后一个参数并将pom.xml中jetty-server的scope去掉
 		 */
-		// JFinal.start("src/main/webapp", 80, "/");
+		 JFinal.start("src/main/webapp", 8080, "/");
 	}
 
 	@Override
