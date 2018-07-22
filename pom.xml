@@ -9,7 +9,7 @@
 	<properties>
 		<jfinal.version>3.2</jfinal.version>
 		<weixin.version>1.9</weixin.version>
-		<ijpay.version>1.1.4</ijpay.version>
+		<ijpay.version>1.1.6</ijpay.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
