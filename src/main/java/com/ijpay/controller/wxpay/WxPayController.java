@@ -675,7 +675,7 @@ System.out.println("certPath>"+wxPayBean.getCertPath());
 	/**
 	 * 查询企业付款到零钱
 	 */
-	@RequestMapping(value = "/transfers",method={RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value = "/transferInfo",method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public String transferInfo(@RequestParam("partner_trade_no") String partner_trade_no) {
 		try {
@@ -769,7 +769,7 @@ System.out.println("certPath>"+wxPayBean.getCertPath());
 	/**
 	 * 微信退款
 	 */
-	@RequestMapping(value = "/pay_notify",method={RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value = "/refund",method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public String refund(@RequestParam("transactionId") String transactionId,@RequestParam("out_trade_no") String out_trade_no) {
 		
@@ -797,7 +797,7 @@ System.out.println("certPath>"+wxPayBean.getCertPath());
 	/**
 	 * 微信退款查询
 	 */
-	@RequestMapping(value = "/pay_notify",method={RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value = "/refundQuery",method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public String refundQuery(@RequestParam("transactionId") String transactionId,@RequestParam("out_trade_no") String out_trade_no,
 			@RequestParam("out_refund_no") String out_refund_no,@RequestParam("refund_id") String refund_id) {
