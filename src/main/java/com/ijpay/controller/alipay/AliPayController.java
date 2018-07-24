@@ -17,6 +17,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.log.Log;
 import com.jpay.alipay.AliPayApi;
 import com.jpay.alipay.AliPayApiConfig;
+import com.jpay.alipay.AliPayApiConfigKit;
 import com.jpay.util.StringUtils;
 import com.jpay.vo.AjaxResult;
 /**
@@ -39,14 +40,19 @@ public class AliPayController extends AliPayApiController {
 
 	@Override
 	public AliPayApiConfig getApiConfig() {
-		AliPayApiConfig aliPayApiConfig = AliPayApiConfig.New()
-		.setAppId(app_id)
-		.setAlipayPublicKey(alipay_public_key)
-		.setCharset(charset)
-		.setPrivateKey(private_key)
-		.setServiceUrl(service_url)
-		.setSignType(sign_type)
-		.build();
+		AliPayApiConfig aliPayApiConfig;
+		try {
+			aliPayApiConfig = AliPayApiConfigKit.getApiConfig(app_id);
+		} catch (Exception e) {
+			aliPayApiConfig = AliPayApiConfig.New()
+					.setAppId(app_id)
+					.setAlipayPublicKey(alipay_public_key)
+					.setCharset(charset)
+					.setPrivateKey(private_key)
+					.setServiceUrl(service_url)
+					.setSignType(sign_type)
+					.build();
+		}
 		return aliPayApiConfig;
 	}
 	

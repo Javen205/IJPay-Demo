@@ -43,11 +43,17 @@ public class WxPayController extends WxPayApiController {
 	String notify_url = prop.get("domain")+"/wxpay/pay_notify";
 	
 	public WxPayApiConfig getApiConfig() {
-		WxPayApiConfig apiConfig = WxPayApiConfig.New()
-				.setAppId(appid)
-				.setMchId(mch_id)
-				.setPaternerKey(partnerKey)
-				.setPayModel(PayModel.BUSINESSMODEL);
+		WxPayApiConfig apiConfig;
+				
+		try {
+			apiConfig = WxPayApiConfigKit.getApiConfig(appid);
+		} catch (Exception e) {
+			apiConfig = WxPayApiConfig.New()
+					.setAppId(appid)
+					.setMchId(mch_id)
+					.setPaternerKey(partnerKey)
+					.setPayModel(PayModel.BUSINESSMODEL);
+		}
 		return apiConfig;
 	}
 	
