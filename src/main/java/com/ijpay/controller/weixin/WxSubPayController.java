@@ -42,13 +42,18 @@ public class WxSubPayController extends WxPayApiController {
 	String sandboxKey = "10f59a38613db16a16194c4506b41aed";
 
 	public WxPayApiConfig getApiConfig() {
-		WxPayApiConfig apiConfig = WxPayApiConfig.New()
-		.setAppId(appid)
-//		.setSubAppId(sub_appid)//可以为空,如果设置了统一下单中sub_openid必须设置
-		.setMchId(mch_id)
-		.setSubMchId(sub_mch_id)
-		.setPaternerKey(partnerKey)
-		.setPayModel(PayModel.SERVICEMODE);
+		WxPayApiConfig apiConfig;
+		try {
+			apiConfig = WxPayApiConfigKit.getApiConfig(appid);
+		} catch (Exception e) {
+			 apiConfig = WxPayApiConfig.New()
+						.setAppId(appid)
+//						.setSubAppId(sub_appid)//可以为空,如果设置了统一下单中sub_openid必须设置
+						.setMchId(mch_id)
+						.setSubMchId(sub_mch_id)
+						.setPaternerKey(partnerKey)
+						.setPayModel(PayModel.SERVICEMODE);
+		}
 		return apiConfig;
 	}
 	
