@@ -1,9 +1,6 @@
 spring:
   profiles:
     active: dev
-logging:
-  file: ijpay.log
-  level: debug
 
 
 

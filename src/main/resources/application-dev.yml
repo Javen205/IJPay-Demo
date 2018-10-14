@@ -6,8 +6,10 @@ server:
 dream:
   weixin:
     dev-mode: true
-    url-patterns: /weixin/**
     wx-configs:
       - appId: wx614c453e0d1dcd12
         appSecret: 19a02e4927d346484fc70327970457f9
         token: Javen
+      - appId: wxc03edcd008ad1e70
+        appSecret: 11ed9e2b8e3e3c131e7be320a42b2b5a
+        token: 123456

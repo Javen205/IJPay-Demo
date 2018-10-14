@@ -16,8 +16,8 @@ public class SpringBootConfig {
 //		jf.setSuffix(".html");
 		jf.setContentType("text/html;charset=UTF-8");
 		jf.setOrder(0);
-		jf.setSessionInView(true);
-		jf.setRequestContextAttribute("ctx");
+//		jf.setSessionInView(true);
+//		jf.setRequestContextAttribute("ctx");
 		return jf;
 				
 	}
