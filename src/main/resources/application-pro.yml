@@ -2,3 +2,12 @@ server:
   port: 8081
   servlet:
     path: /
+    
+dream:
+  weixin:
+    dev-mode: true
+    url-patterns: /weixin/**
+    wx-configs:
+      - appId: wx614c453e0d1dcd12
+        appSecret: 19a02e4927d346484fc70327970457f9
+        token: Javen

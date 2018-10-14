@@ -5,23 +5,25 @@
 
 	<groupId>com.ijpay</groupId>
 	<artifactId>IJPay-Demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>IJPay-Demo</name>
-	<description>Demo project for IJPay</description>
+	<description>SpringBoot Demo project for IJPay</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.6.RELEASE</version>
-		<relativePath />
+		<version>2.0.5.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
 		<ijapy.version>1.1.6</ijapy.version>
 		<zxing.version>3.2.1</zxing.version>
-		<weixin-java-mp.version>2.8.0</weixin-java-mp.version>
+		<weixin.version>1.3.0</weixin.version>
+		<enjoy.version>3.5</enjoy.version>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
@@ -37,27 +39,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<!-- 如果是打war发布到tomcat 需要打开下面的注释 -->
-			<!-- 
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-			 -->
+			<!-- <exclusions> <exclusion> <groupId>org.springframework.boot</groupId> 
+				<artifactId>spring-boot-starter-tomcat</artifactId> </exclusion> </exclusions> -->
 
 		</dependency>
-
-
 		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.1</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
 		</dependency>
+
+
 		<dependency>
 			<groupId>com.jfinal</groupId>
 			<artifactId>enjoy</artifactId>
-			<version>3.2</version>
+			<version>${enjoy.version}</version>
 		</dependency>
 
 		<dependency>
@@ -112,7 +109,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -135,11 +131,10 @@
 			<version>3.4</version>
 		</dependency>
 		<!-- 银联必须 -->
-		
 		<dependency>
-			<groupId>com.github.binarywang</groupId>
-			<artifactId>weixin-java-mp</artifactId>
-			<version>${weixin-java-mp.version}</version>
+			<groupId>net.dreamlu</groupId>
+			<artifactId>spring-boot-starter-weixin</artifactId>
+			<version>${weixin.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -155,5 +150,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

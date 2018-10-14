@@ -1,6 +1,7 @@
-# IJPay
+### IJPay-Demo
 
->主分支为JFinal版本Demo，SpringBoot分支为SpringBoot版本的Demo
+
+>主分支为JFinal版本Demo，SpringBoot分支为SpringBoot版本的Demo [如何使用?](https://javen205.gitee.io/ijpay/doc/IJPay-Demo.html)
 
 ![](assets/img/IJPay-t.png)
 
@@ -16,12 +17,11 @@
 
 **特别说明：** 不依赖任何第三方 mvc 框架，仅仅作为工具使用简单快速完成支付模块的开发，可轻松嵌入到任何系统里。
 
-**微信群在线交流活动** [点击这里查看详情](https://github.com/Javen205/IJPay/wiki)
 
+Gitee：[http://gitee.com/Javen205/IJPay](http://gitee.com/Javen205/IJPay)
 
 GitHub：[https://github.com/Javen205/IJPay](https://github.com/Javen205/IJPay)
 
-Gitee：[http://gitee.com/Javen205/IJPay](http://gitee.com/Javen205/IJPay)
 
 
 - IJPay是[JPay](https://github.com/Javen205/JPay)后台接口SDK不依赖任何第三方 mvc 框架，仅仅作为工具使用简单快速完成支付模块的开发，可轻松嵌入到任何系统里。
@@ -30,19 +30,19 @@ Gitee：[http://gitee.com/Javen205/IJPay](http://gitee.com/Javen205/IJPay)
 
 ### 接入文档
 
-[GitBook 欢迎关注，如有疑问请发issues](https://www.gitbook.com/book/javen205/ijpay/details)
+[IJPay 接入文档，如有疑问请发issues](https://javen205.gitee.io/IJPay)
 
 
 
 **使用Demo之前请熟读以下文章**
 
-[配置应用环境](https://javen205.gitbooks.io/ijpay/content/alipay/alipay-config.html)
+[配置应用环境](https://javen205.gitee.io/ijpay/doc/ijpay/alipay/alipay-config.html)
 
-[IJPay 支付宝初始化](https://javen205.gitbooks.io/ijpay/content/alipay/alipay-init.html)
+[IJPay 支付宝初始化](https://javen205.gitee.io/ijpay/doc/ijpay/alipay/alipay-init.html)
 
 ### 联系方式
 
-[IJPay交流圈-需要支援点击这里](https://javen205.gitbooks.io/ijpay/content/contact.html)
+[IJPay交流圈-需要帮助点击这里](https://javen205.gitee.io/ijpay/doc/contact.html)
 
 [qq0groupsvg]: https://img.shields.io/badge/QQ群-148540125-fba7f9.svg
 [qq0group]: http://shang.qq.com/wpa/qunwpa?idkey=5005dbbee62dac64b34fedc9ff73511762da5d02642a1ef526522fb2e07852dd
@@ -55,7 +55,7 @@ Gitee：[http://gitee.com/Javen205/IJPay](http://gitee.com/Javen205/IJPay)
 
 ### 贡献代码
 
-最后如果该库对你有帮助不妨右上角点点Star或者任意打赏支持一下，我更喜欢你 Fork PR 成为项目贡献者 .
+最后如果该库对你有帮助不妨右上角点点Star,我更喜欢你 Fork PR 成为项目贡献者.
 
 
 ### 效果图

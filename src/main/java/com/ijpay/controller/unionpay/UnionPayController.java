@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jfinal.kit.JsonKit;
 import com.jpay.ext.kit.DateKit;
 import com.jpay.ext.kit.HttpKit;
 import com.jpay.unionpay.AcpService;
@@ -29,7 +30,6 @@ import com.jpay.unionpay.SDKConfig;
 import com.jpay.unionpay.UnionPayApi;
 import com.jpay.unionpay.UnionPayApiConfig;
 import com.jpay.vo.AjaxResult;
-import com.wechat.utils.JsonUtils;
 
 @Controller
 @RequestMapping("/unionpay")
@@ -404,7 +404,7 @@ public class UnionPayController {
 					.setOrderId(String.valueOf(System.currentTimeMillis()))//商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
 					.setTxnTime(DateKit.toStr(new Date(), DateKit.UnionTimeStampPattern))//订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效	
 					.setTxnAmt("1234")
-					.setBillQueryInfo(AcpService.base64Encode(JsonUtils.toJson(map), DemoBase.encoding))
+					.setBillQueryInfo(AcpService.base64Encode(JsonKit.toJson(map), DemoBase.encoding))
 					.setBackUrl(SDKConfig.getConfig().getBackUrl())
 					.setFrontUrl(SDKConfig.getConfig().getFrontUrl())
 //					.setReqReserved("IJPay repaymentGateway")
