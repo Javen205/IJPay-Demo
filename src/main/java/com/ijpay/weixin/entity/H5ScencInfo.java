@@ -19,7 +19,7 @@ public class H5ScencInfo {
 	
 	@Override
 	public String toString() {
-		return JsonKit.toJson(h5_info);
+		return JsonKit.toJson(this);
 	}
 
 

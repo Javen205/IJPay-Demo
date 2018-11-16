@@ -94,7 +94,7 @@ public class WxPayController extends WxPayApiController {
 				.setTradeType(TradeType.MWEB)
 				.setNotifyUrl(notify_url)
 				.setOutTradeNo(String.valueOf(System.currentTimeMillis()))
-				.setSceneInfo(h5_info.toString())
+				.setSceneInfo(sceneInfo.toString())
 				.build();
 		
 		String xmlResult = WxPayApi.pushOrder(false,params);
