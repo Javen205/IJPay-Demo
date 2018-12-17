@@ -125,7 +125,7 @@ log.info(xmlResult);
 	
 	/**
 	 * 公众号支付
-	 * @TODO 待测试 o5NJx1dVRilQI6uUVSaBDuLnM3iM
+	 * 已测试
 	 */
 	public void webPay() {
 		
