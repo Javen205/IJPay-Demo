@@ -527,6 +527,8 @@ log.info("最新返回apk的参数:"+jsonStr);
 	 * 微信小程序支付
 	 */
 	public void aappPay(){
+		//需要通过授权来获取openId
+		String openId = (String) getSession().getAttribute("openId");
 		
 		String ip = IpKit.getRealIp(getRequest());
 		if (StrKit.isBlank(ip)) {
@@ -534,6 +536,7 @@ log.info("最新返回apk的参数:"+jsonStr);
 		}
 		
 		Map<String, String> params = WxPayApiConfigKit.getWxPayApiConfig()
+				.setOpenId(openId)
 				.setAttach("IJPay 测试  -By Javen")
 				.setBody("IJPay 小程序支付测试  -By Javen")
 				.setSpbillCreateIp(ip)

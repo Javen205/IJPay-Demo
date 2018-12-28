@@ -87,7 +87,7 @@ public class DemoBase {
 	 * @param filePath ZM文件全路径
 	 * @return 包含每一笔交易中 序列号 和 值 的map序列
 	 */
-	public static List<Map> parseZMFile(String filePath){
+	public static List<Map<Integer,String>> parseZMFile(String filePath){
 		int lengthArray[] = {3,11,11,6,10,19,12,4,2,21,2,32,2,6,10,13,13,4,15,2,2,6,2,4,32,1,21,15,1,15,32,13,13,8,32,13,13,12,2,1,32,98};
 		return parseFile(filePath,lengthArray);
 	}
@@ -98,7 +98,7 @@ public class DemoBase {
 	 * @param filePath ZME文件全路径
 	 * @return 包含每一笔交易中 序列号 和 值 的map序列
 	 */
-	public static List<Map> parseZMEFile(String filePath){
+	public static List<Map<Integer,String>> parseZMEFile(String filePath){
 		int lengthArray[] = {3,11,11,6,10,19,12,4,2,2,6,10,4,12,13,13,15,15,1,12,2,135};
 		return parseFile(filePath,lengthArray);
 	}
@@ -109,8 +109,8 @@ public class DemoBase {
 	 * @param lengthArray 参照《全渠道平台接入接口规范 第3部分 文件接口》 全渠道商户对账文件 6.1 ZM文件和6.2 ZME 文件 格式的类型长度组成int型数组
 	 * @return
 	 */
-	private static List<Map> parseFile(String filePath,int lengthArray[]){
-	 	List<Map> ZmDataList = new ArrayList<Map>();
+	private static List<Map<Integer,String>> parseFile(String filePath,int lengthArray[]){
+	 	List<Map<Integer,String>> ZmDataList = new ArrayList<Map<Integer,String>>();
 	 	try {
             String encoding="UTF-8";
             File file=new File(filePath);
@@ -146,7 +146,7 @@ public class DemoBase {
 		return ZmDataList;	
 	}
 	 
-    public static String getFileContentTable(List<Map> dataList,String file){
+    public static String getFileContentTable(List<Map<Integer,String>> dataList,String file){
     	StringBuffer  tableSb = new StringBuffer("对账文件的规范参考 https://open.unionpay.com/ajweb/help/file/ 产品接口规范->平台接口规范:文件接口</br> 文件【"+file + "】解析后内容如下：");
     	tableSb.append("<table border=\"1\">");
     	if(dataList.size() > 0){

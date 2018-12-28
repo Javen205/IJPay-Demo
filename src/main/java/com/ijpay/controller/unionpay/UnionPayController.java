@@ -320,8 +320,7 @@ public class UnionPayController extends Controller {
 					fileContentDispaly ="<br>获取到商户对账文件，并落地到"+outPutDirectory+",并解压缩 <br>";
 					for(String file : fileList){
 						if(file.indexOf("ZM_")!=-1){
-							@SuppressWarnings("rawtypes")
-							List<Map> ZmDataList = DemoBase.parseZMFile(file);
+							List<Map<Integer,String>> ZmDataList = DemoBase.parseZMFile(file);
 							fileContentDispaly = fileContentDispaly+DemoBase.getFileContentTable(ZmDataList,file);
 						}else if(file.indexOf("ZME_")!=-1){
 							DemoBase.parseZMEFile(file);
