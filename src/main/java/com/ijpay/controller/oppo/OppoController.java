@@ -69,7 +69,7 @@ public class OppoController extends Controller {
 		}
 	}
 	
-	public void test() {
+	public void pay_notify() {
 		try {
 			String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCBnG5djzlGN1SKhZ0MC+nkqHIWLh2FVhObHB8C1A8DQHS0L/YclGejmdHQzvOc/BitUHxZicVk7WoER3yIFXd1jSewx+Ug+VkW1V7KAA6S+DjtIbP1AR640fcoQyP2wPwDldJ0nHRjmvRd6A2GQm4InoGaSRbhmUUmUQdpKF09ZwIDAQAB";
 			Map<String, String> params = new HashMap<>();
@@ -80,8 +80,10 @@ public class OppoController extends Controller {
 			    String value = map.get(key)[0];
 			    params.put(key, value);
 			}
+			String sign = params.get("sign");
+			params.remove("sign");
 			String data  =PaymentKit.packageSign(params, false);
-			boolean isOK = RSAUtils.checkByPublicKey(data, params.get("sign"), publicKey);
+			boolean isOK = RSAUtils.checkByPublicKey(data, sign, publicKey);
 			System.out.println("签名校验:"+isOK);
 			renderJson(params);
 		} catch (Exception e) {
