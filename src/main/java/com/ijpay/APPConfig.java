@@ -2,6 +2,7 @@ package com.ijpay;
 
 import com.ijpay.controller.IndexController;
 import com.ijpay.controller.alipay.AliPayController;
+import com.ijpay.controller.oppo.OppoController;
 import com.ijpay.controller.unionpay.UnionPayController;
 import com.ijpay.controller.weixin.WxOauthController;
 import com.ijpay.controller.weixin.WxPayController;
@@ -68,6 +69,7 @@ public class APPConfig extends JFinalConfig {
 		me.add("/wxpay", WxPayController.class);
 		me.add("/wxsubpay", WxSubPayController.class);
 		me.add("/unionpay", UnionPayController.class);
+		me.add("/oppo", OppoController.class);
 
 	}
 
