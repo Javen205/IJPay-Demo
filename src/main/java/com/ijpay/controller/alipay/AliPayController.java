@@ -98,7 +98,7 @@ public class AliPayController extends AliPayApiController {
 			model.setTotalAmount("0.01");
 			model.setPassbackParams("callback params");
 			model.setProductCode("QUICK_MSECURITY_PAY");
-			String orderInfo = AliPayApi.startAppPay(model, aliPayBean.getDomain() + "/alipay/notify_url");
+			String orderInfo = AliPayApi.appPayToResponse(model, aliPayBean.getDomain() + "/alipay/notify_url").getBody();
 			result.success(orderInfo);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -195,7 +195,7 @@ public class AliPayController extends AliPayApiController {
 		model.setOutTradeNo(StringUtils.getOutTradeNo());
 		model.setScene("bar_code");
 		try {
-			return AliPayApi.tradePay(model,notifyUrl);
+			return AliPayApi.tradePayToResponse(model,notifyUrl).getBody();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,7 +221,7 @@ public class AliPayController extends AliPayApiController {
 		model.setOutTradeNo(StringUtils.getOutTradeNo());
 		model.setScene("wave_code");
 		try {
-			return AliPayApi.tradePay(model,notifyUrl);
+			return AliPayApi.tradePayToResponse(model,notifyUrl).getBody();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -246,7 +246,7 @@ public class AliPayController extends AliPayApiController {
 		model.setTimeoutExpress("5m");
 		model.setOutTradeNo(StringUtils.getOutTradeNo());
 		try {
-			String resultStr = AliPayApi.tradePrecreatePay(model, notifyUrl);
+			String resultStr = AliPayApi.tradePrecreatePayToResponse(model, notifyUrl).getBody();
 			JSONObject jsonObject = JSONObject.parseObject(resultStr);
 			return jsonObject.getJSONObject("alipay_trade_precreate_response").getString("qr_code");
 		} catch (Exception e) {
@@ -362,7 +362,7 @@ public class AliPayController extends AliPayApiController {
 			model.setTradeNo("2017081021001004200200273870");
 			model.setRefundAmount("86.00");
 			model.setRefundReason("正常退款");
-			return AliPayApi.tradeRefund(model);
+			return AliPayApi.tradeRefundToResponse(model).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
@@ -510,7 +510,7 @@ public class AliPayController extends AliPayApiController {
 			AlipayOpenAuthTokenAppModel model = new AlipayOpenAuthTokenAppModel();
 			model.setGrantType("authorization_code");
 			model.setCode(app_auth_code);
-			return  AliPayApi.openAuthTokenApp(model);
+			return  AliPayApi.openAuthTokenAppToResponse(model).getBody();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -525,7 +525,7 @@ public class AliPayController extends AliPayApiController {
 		try {
 			AlipayOpenAuthTokenAppQueryModel model = new AlipayOpenAuthTokenAppQueryModel();
 			model.setAppAuthToken(app_auth_token);
-			return  AliPayApi.openAuthTokenAppQuery(model);
+			return  AliPayApi.openAuthTokenAppQueryToResponse(model).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
@@ -578,7 +578,7 @@ public class AliPayController extends AliPayApiController {
 			model.setSiteBegin("001");
 			model.setSiteEnd("002");
 			model.setTicketPrice("4");
-			return AliPayApi.voucherGenerate(model);
+			return AliPayApi.voucherGenerateToResponse(model).getBody();
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
