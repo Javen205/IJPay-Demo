@@ -10,7 +10,7 @@
 		<jfinal.version>3.5</jfinal.version>
 		<undertow.version>1.3</undertow.version>
 		<weixin.version>1.9</weixin.version>
-		<ijpay.version>1.2.0-SNAPSHOT</ijpay.version>
+		<ijpay.version>1.2.0</ijpay.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>

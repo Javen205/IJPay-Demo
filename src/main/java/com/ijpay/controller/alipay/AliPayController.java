@@ -347,7 +347,7 @@ public class AliPayController extends AliPayApiController {
 			model.setOutTradeNo("081014283315023");
 			model.setTradeNo("2017081021001004200200273870");
 
-			boolean isSuccess = AliPayApi.isTradeQuery(model);
+			boolean isSuccess = AliPayApi.tradeQueryToResponse(model).isSuccess();
 			renderJson(isSuccess);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
@@ -402,7 +402,7 @@ public class AliPayController extends AliPayApiController {
 			model.setOutTradeNo("081014283315033");
 			model.setTradeNo("2017081021001004200200274066");
 
-			boolean isSuccess = AliPayApi.isTradeCancel(model);
+			boolean isSuccess = AliPayApi.tradeCancelToResponse(model).isSuccess();
 			renderJson(isSuccess);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();

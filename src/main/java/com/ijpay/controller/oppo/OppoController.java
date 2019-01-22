@@ -85,10 +85,15 @@ public class OppoController extends Controller {
 			String data  =PaymentKit.packageSign(params, false);
 			boolean isOK = RSAUtils.checkByPublicKey(data, sign, publicKey);
 			System.out.println("签名校验:"+isOK);
-			renderJson(params);
+			if(isOK) {
+				//处理业务逻辑
+				renderText("result=OK&resultMsg=成功");
+			}else {
+				renderText("result=FAIL&resultMsg=签名校验失败");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			renderJson(ajaxResult.addError("系统异常"));
+			renderText("result=FAIL&resultMsg=系统异常");
 		}
 	}
 }
