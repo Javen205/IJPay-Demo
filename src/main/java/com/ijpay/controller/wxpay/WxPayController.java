@@ -563,7 +563,7 @@ public class WxPayController extends WxPayApiController {
 	@RequestMapping(value = "/aappPay", method = { RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
 	public AjaxResult aappPay(HttpServletRequest request) {
-
+		String openId = (String) request.getSession().getAttribute("openId");
 		String ip = IpKit.getRealIp(request);
 		if (StrKit.isBlank(ip)) {
 			ip = "127.0.0.1";
@@ -571,6 +571,7 @@ public class WxPayController extends WxPayApiController {
 
 		Map<String, String> params = WxPayApiConfigKit
 				.getWxPayApiConfig()
+				.setOpenId(openId)
 				.setAttach("IJPay 测试  -By Javen")
 				.setBody("IJPay 小程序支付测试  -By Javen")
 				.setSpbillCreateIp(ip).setTotalFee("100")
