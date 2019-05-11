@@ -28,6 +28,15 @@ GitHub：[https://github.com/Javen205/IJPay](https://github.com/Javen205/IJPay)
 - [JPay](https://github.com/Javen205/JPay) 是简易而不简单的Android 支付SDK，JPay是对微信App支付、支付宝App支付的二次封装,对外提供一个相对简单的接口以及支付结果的回调。
 - IOS支付SDK，敬请关注。
 
+### 开源推荐
+
+- `TNW` 微信公众号开发脚手架：<https://gitee.com/javen205/TNW>
+- `IJPay` 让支付触手可及：<https://gitee.com/javen205/IJPay>
+- SpringBoot 微服务高效开发 `mica` 工具集：<https://gitee.com/596392912/mica>
+- `Avue` 一款基于 vue 可配置化的神奇框架：<https://gitee.com/smallweigit/avue>
+- `pig` 宇宙最强微服务（架构师必备）：<https://gitee.com/log4j/pig>
+- `SpringBlade` 完整的线上解决方案（企业开发必备）：<https://gitee.com/smallc/SpringBlade>
+
 ### 接入文档
 
 [IJPay 接入文档，如有疑问请发issues](https://javen205.gitee.io/IJPay)
