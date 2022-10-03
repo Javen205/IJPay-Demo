@@ -188,7 +188,11 @@ public class DemoBase {
             ZipEntry entry;
             try {
                 while((entry = zin.getNextEntry())!=null && !entry.isDirectory()){
-                	file = new File(outPutDirectory,entry.getName());  
+																	final File zipEntryFile = new File(outPutDirectory,entry.getName());
+																	if (!zipEntryFile.toPath().normalize().startsWith(outPutDirectory)) {
+																		throw new IOException("Bad zip entry");
+																	}
+																	file = zipEntryFile;  
                     if(!file.exists()){  
                         (new File(file.getParent())).mkdirs();  
                     }
